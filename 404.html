@@ -1,0 +1,1597 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Buyer Cockpit</title>
+<style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0;padding:0}img,svg{max-width:100%}button,input,select,textarea{font:inherit;color:inherit}</style>
+</head><body>
+<style>
+/* ============================================================
+   REPLENISH — COCKPIT
+   A premium, single-theme dark analytics cockpit.
+   Deep cool near-black ground · one electric teal accent ·
+   status hues (amber / red / violet / blue) tuned to glow.
+   ============================================================ */
+:root{
+  /* ---- elevation ladder (comfortable cool charcoal/slate, blue undertone) ---- */
+  --bg:#1B212A;             /* ground — dark slate, not a black hole */
+  --surface-1:#222A34;      /* rail / panels — clearly above ground */
+  --surface-2:#29323E;      /* cards / rows */
+  --surface-3:#323C4A;      /* wells / inputs / tracks */
+  --surface-hi:#3E4957;     /* hover / hi-track */
+  --line:#37414F;
+  --line-strong:#4A5568;
+
+  /* ---- ink (comfortable off-white, faint cool bias) ---- */
+  --ink:#E8ECF3;
+  --ink-soft:#9BA6B7;
+  --ink-faint:#737E8F;
+
+  /* ---- the one accent: electric teal-cyan (best net + emphasis) ---- */
+  --accent:#38D6C6;
+  --accent-bright:#6FEEE0;
+  --accent-ink:#04120F;
+  --accent-soft:rgba(56,214,198,.16);
+  --accent-line:rgba(56,214,198,.42);
+  --accent-glow:rgba(56,214,198,.55);
+
+  /* ---- semantic status — pop on the lifted ground ---- */
+  --low:#F6BC46;   --low-soft:rgba(246,188,70,.16);   --low-line:rgba(246,188,70,.36);
+  --out:#F47069;   --out-soft:rgba(244,112,105,.16);  --out-line:rgba(244,112,105,.38);
+  --fast:#B295FF;  --fast-soft:rgba(178,149,255,.17); --fast-line:rgba(178,149,255,.38);
+  --slow:#66A4F2;  --slow-soft:rgba(102,164,242,.16); --slow-line:rgba(102,164,242,.36);
+  --chip-ink:#12161D;
+
+  --shadow-s:0 1px 2px rgba(0,0,0,.35);
+  --shadow-m:0 6px 18px rgba(0,0,0,.42),0 1px 2px rgba(0,0,0,.30);
+  --shadow-l:0 24px 64px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.42);
+
+  --r-s:7px; --r-m:10px; --r-l:14px;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg)}
+img,svg{max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--accent-soft);color:var(--accent-bright)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.cockpit{
+  font-family:var(--sans);background:var(--bg);color:var(--ink);
+  min-height:100vh;display:grid;grid-template-columns:262px 1fr;
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+
+/* ============ RAIL ============ */
+.rail{
+  background:var(--surface-1);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:22px;padding:20px 16px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 4px 17px;border-bottom:1px solid var(--line)}
+.brand .mk{
+  width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;
+  color:var(--accent-ink);background:linear-gradient(150deg,var(--accent-bright),var(--accent));
+  box-shadow:0 0 0 1px var(--accent-line),0 4px 16px var(--accent-glow);
+}
+.brand .mk svg{width:19px;height:19px}
+.brand .nm{font-size:16px;font-weight:750;letter-spacing:-.02em;line-height:1.1}
+.brand .sb{font-size:9.5px;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase;margin-top:2px}
+
+.rgroup{display:flex;flex-direction:column;gap:8px}
+.rlab{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;padding-left:2px}
+
+.buyerCard{display:flex;align-items:center;gap:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-s);padding:10px 11px}
+.av{width:31px;height:31px;border-radius:9px;flex:none;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700;
+  color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)}
+.buyerCard .bn{font-size:13px;font-weight:650;line-height:1.2}
+.buyerCard .br{font-size:10.5px;color:var(--ink-faint);font-family:var(--mono);margin-top:1px}
+
+.sel{
+  width:100%;appearance:none;background:var(--surface-2);border:1px solid var(--line);
+  color:var(--ink);font-size:13px;font-weight:600;padding:10px 32px 10px 12px;border-radius:var(--r-s);cursor:pointer;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23616D7E' stroke-width='2.5' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right 10px center;background-size:14px;
+  transition:border-color .15s,box-shadow .15s;
+}
+.sel:hover{border-color:var(--line-strong)}
+.sel:focus-visible{border-color:var(--accent)}
+.sel option{background:var(--surface-2);color:var(--ink)}
+
+nav.secs{display:flex;flex-direction:column;gap:3px}
+.secBtn{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  background:none;border:1px solid transparent;border-radius:var(--r-s);padding:9px 11px;cursor:pointer;
+  font-family:inherit;font-size:12.5px;color:var(--ink-soft);font-weight:550;
+  transition:background .14s,color .14s,border-color .14s;
+}
+.secBtn:hover{background:var(--surface-2);color:var(--ink)}
+.secBtn[aria-current="true"]{background:var(--surface-2);color:var(--ink);font-weight:680;border-color:var(--line-strong)}
+.secBtn[aria-current="true"]::before{content:"";position:absolute;left:0;width:3px;height:18px;border-radius:2px;background:var(--sc);box-shadow:0 0 10px var(--sc)}
+.secBtn{position:relative}
+.secBtn .dt{width:8px;height:8px;border-radius:50%;flex:none;background:var(--sc);box-shadow:0 0 8px var(--sc)}
+.secBtn .ct{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums;
+  background:var(--surface-3);border-radius:6px;padding:1px 7px;min-width:24px;text-align:center}
+.secBtn[aria-current="true"] .ct{color:var(--ink)}
+.secBtn.low{--sc:var(--low)} .secBtn.out{--sc:var(--out)} .secBtn.fast{--sc:var(--fast)} .secBtn.slow{--sc:var(--slow)}
+
+.railfoot{margin-top:auto;display:flex;flex-direction:column;gap:11px;padding-top:16px;border-top:1px solid var(--line)}
+.basketBtn{
+  display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line-strong);
+  background:var(--surface-2);border-radius:var(--r-s);padding:11px 12px;cursor:pointer;
+  font-family:inherit;color:var(--ink);text-align:left;transition:border-color .15s,transform .12s,box-shadow .15s;
+}
+.basketBtn:hover{border-color:var(--accent-line);box-shadow:0 0 0 1px var(--accent-line)}
+.basketBtn:active{transform:translateY(1px)}
+.basketBtn .bt{font-size:12.5px;font-weight:700}
+.basketBtn .bs{font-size:10.5px;color:var(--ink-faint);font-family:var(--mono);margin-top:1px}
+.pillN{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;min-width:23px;height:23px;border-radius:8px;
+  display:grid;place-items:center;padding:0 7px;font-variant-numeric:tabular-nums;
+  background:linear-gradient(150deg,var(--accent-bright),var(--accent));color:var(--accent-ink);box-shadow:0 0 14px var(--accent-glow)}
+.pillN.zero{background:var(--surface-3);color:var(--ink-faint);box-shadow:none}
+.railNote{font-size:10px;color:var(--ink-faint);font-family:var(--mono);line-height:1.55;padding:9px 10px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-s)}
+
+/* ============ STAGE ============ */
+.stage{min-width:0;display:flex;flex-direction:column}
+.topbar{
+  padding:22px 30px 20px;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(680px 220px at 12% -40%,var(--accent-soft),transparent 70%),
+    var(--surface-1);
+}
+.tb-title h1{margin:0;font-size:23px;font-weight:750;letter-spacing:-.025em;line-height:1.12}
+.tb-title .meta{margin:6px 0 0;font-size:12.5px;color:var(--ink-soft);font-family:var(--mono)}
+.tb-title .meta b{color:var(--ink);font-weight:650}
+.tb-title .meta .accn{color:var(--accent)}
+.search{margin-left:auto;position:relative;min-width:230px}
+.search input{
+  width:100%;background:var(--surface-3);border:1px solid var(--line);border-radius:var(--r-s);
+  padding:10px 12px 10px 36px;font-size:13.5px;color:var(--ink);transition:border-color .15s,box-shadow .15s;
+}
+.search input::placeholder{color:var(--ink-faint)}
+.search input:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-faint)}
+
+/* ---- KPI row ---- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;padding:20px 30px 0}
+.kpi{
+  position:relative;text-align:left;overflow:hidden;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:15px 16px 16px;cursor:pointer;font-family:inherit;color:var(--ink);
+  display:flex;flex-direction:column;gap:7px;transition:transform .14s,border-color .15s,box-shadow .15s;
+}
+.kpi::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--kc);opacity:.55;transition:opacity .15s}
+.kpi::after{content:"";position:absolute;right:-40px;top:-40px;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,var(--kc),transparent 65%);opacity:.16;pointer-events:none}
+.kpi:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow-m)}
+.kpi[aria-current="true"]{border-color:var(--kc);box-shadow:0 0 0 1px var(--kc),0 8px 26px rgba(0,0,0,.5)}
+.kpi[aria-current="true"]::before{opacity:1;box-shadow:0 0 12px var(--kc)}
+.kpi .kpi-top{display:flex;align-items:center;gap:8px}
+.kpi .kpi-dot{width:8px;height:8px;border-radius:50%;background:var(--kc);box-shadow:0 0 9px var(--kc)}
+.kpi .kpi-l{font-size:12px;font-weight:650;color:var(--ink-soft)}
+.kpi .kpi-v{font-family:var(--mono);font-size:36px;font-weight:700;letter-spacing:-.035em;line-height:.95;color:var(--kc);font-variant-numeric:tabular-nums}
+.kpi .kpi-d{font-size:10.5px;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em}
+.kpi.low{--kc:var(--low)} .kpi.out{--kc:var(--out)} .kpi.fast{--kc:var(--fast)} .kpi.slow{--kc:var(--slow)}
+
+/* ============ LIST ============ */
+.listwrap{padding:20px 30px 90px;display:flex;flex-direction:column;gap:10px}
+.listhead{display:flex;align-items:baseline;gap:12px;padding:2px 2px 3px}
+.listhead h2{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.listhead .hint{font-size:11.5px;color:var(--ink-faint);margin-left:auto;font-family:var(--mono)}
+
+.row{
+  position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-m);
+  overflow:hidden;transition:border-color .16s,box-shadow .16s;
+}
+.row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rc);opacity:.85}
+.row:hover{border-color:var(--line-strong);box-shadow:var(--shadow-m)}
+.row.open{border-color:var(--line-strong);box-shadow:var(--shadow-m)}
+.row.low{--rc:var(--low)} .row.out{--rc:var(--out)} .row.fast{--rc:var(--fast)} .row.slow{--rc:var(--slow)}
+.row.low{--rc-soft:var(--low-soft)} .row.out{--rc-soft:var(--out-soft)} .row.fast{--rc-soft:var(--fast-soft)} .row.slow{--rc-soft:var(--slow-soft)}
+
+.rHead{
+  display:grid;grid-template-columns:minmax(196px,2.3fr) 86px minmax(150px,1.35fr) minmax(132px,1.05fr) minmax(150px,1.2fr) 30px;
+  gap:16px;align-items:center;padding:14px 16px 14px 18px;cursor:pointer;background:none;border:0;
+  width:100%;text-align:left;font-family:inherit;color:var(--ink);transition:background .14s;
+}
+.rHead:hover{background:rgba(255,255,255,.035)}
+.cLab{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+.pName{font-size:14px;font-weight:640;letter-spacing:-.008em;line-height:1.28}
+.pCode{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-top:3px;display:flex;gap:7px;align-items:center}
+.pCode .cat{color:var(--ink-soft)}
+.num{font-family:var(--mono);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.num.unit{font-size:10px;color:var(--ink-faint);font-weight:500}
+
+/* cover gauge */
+.coverCell{min-width:0}
+.coverRow{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.coverDays{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--rc);font-variant-numeric:tabular-nums;line-height:1}
+.coverDays small{font-size:9.5px;font-weight:500;color:var(--ink-faint)}
+.gauge{position:relative;height:7px}
+.gauge-track{position:relative;height:7px;border-radius:4px;background:var(--surface-hi);overflow:hidden;
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 8px,transparent 8px 10px);
+  mask:repeating-linear-gradient(90deg,#000 0 8px,transparent 8px 10px)}
+.gauge-fill{display:block;height:100%;background:var(--rc)}
+.gauge-tick{position:absolute;top:-2px;width:2px;height:11px;background:var(--ink-soft);opacity:.6;border-radius:1px;transform:translateX(-1px)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;padding:3px 7px;border-radius:6px;border:1px solid transparent;white-space:nowrap}
+.badge.low{background:var(--low-soft);color:var(--low);border-color:var(--low-line)}
+.badge.out{background:var(--out-soft);color:var(--out);border-color:var(--out-line)}
+.badge.fast{background:var(--fast-soft);color:var(--fast);border-color:var(--fast-line)}
+.badge.slow{background:var(--slow-soft);color:var(--slow);border-color:var(--slow-line)}
+
+.spark{width:100%;height:38px;display:block}
+.bestBox{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bestSup{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bestNet{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:6px}
+.bestNet .was{color:var(--ink-faint);font-weight:500;font-size:11px;text-decoration:line-through;text-decoration-color:var(--line-strong)}
+.chev{color:var(--ink-faint);display:grid;place-items:center;transition:transform .24s,color .15s}
+.rHead:hover .chev{color:var(--ink-soft)}
+.row.open .chev{transform:rotate(180deg);color:var(--accent)}
+.chev svg{width:18px;height:18px}
+
+/* ---- expand ---- */
+.rBody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+.row.open .rBody{grid-template-rows:1fr}
+.rBodyIn{overflow:hidden}
+.bodyPad{padding:2px 18px 18px;border-top:1px solid var(--line)}
+
+/* recommendation panel */
+.recPanel{
+  display:grid;grid-template-columns:minmax(240px,1fr) minmax(250px,1.1fr);gap:0;
+  border:1px solid var(--line);border-left:3px solid var(--rt);border-radius:var(--r-s);
+  background:var(--surface-1);margin:15px 0 4px;overflow:hidden;
+}
+.recPanel.ok{--rt:var(--accent)} .recPanel.warn{--rt:var(--low)} .recPanel.urgent{--rt:var(--out)}
+.recMain{padding:13px 15px;display:flex;flex-direction:column;gap:7px}
+.recTop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.recTag{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+  padding:3px 8px;border-radius:5px;background:var(--rt);color:var(--chip-ink)}
+.recConf{margin-left:auto;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;cursor:help}
+.confBar{width:48px;height:5px;border-radius:3px;background:var(--surface-3);overflow:hidden;display:block}
+.confBar i{display:block;height:100%;background:var(--rt);border-radius:3px}
+.recLabel{font-size:16px;font-weight:700;letter-spacing:-.014em;line-height:1.22}
+.recQty{font-size:12px;color:var(--ink-soft);font-family:var(--mono)}
+.recQty b{color:var(--ink);font-variant-numeric:tabular-nums}
+.recWhy{padding:13px 15px;border-left:1px solid var(--line);background:var(--surface-2)}
+.whyTitle{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:650;margin-bottom:7px}
+.recWhy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.recWhy li{font-size:12.5px;color:var(--ink-soft);padding-left:16px;position:relative;line-height:1.4}
+.recWhy li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--rt);opacity:.7;box-shadow:0 0 6px var(--rt)}
+@media (max-width:720px){.recPanel{grid-template-columns:1fr}.recWhy{border-left:0;border-top:1px solid var(--line)}}
+
+/* stock breakdown strip */
+.bodyBar{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;padding:14px 0 13px}
+.kv{display:flex;flex-direction:column;gap:3px;padding:0 16px 0 0;margin-right:16px;border-right:1px solid var(--line)}
+.kv:last-of-type{border-right:0}
+.kv .k{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+.kv .v{font-family:var(--mono);font-size:14px;font-weight:650;font-variant-numeric:tabular-nums}
+.kv.qty{margin-left:auto;margin-right:0;border-right:0;text-align:right;align-items:flex-end}
+.kv.qty .v{color:var(--accent)}
+
+/* supplier table */
+.tblWrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-s);background:var(--surface-1)}
+table.sup{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+table.sup th{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);
+  font-weight:650;text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-1)}
+table.sup th.r,table.sup td.r{text-align:right}
+th.ctr,td.ctr{text-align:center}
+table.sup td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--ink-soft)}
+table.sup tr:last-child td{border-bottom:0}
+table.sup tbody tr{transition:background .13s}
+table.sup tbody tr:hover{background:rgba(255,255,255,.04)}
+table.sup tr.win{background:var(--accent-soft)}
+table.sup tr.win:hover{background:var(--accent-soft)}
+table.sup tr.win td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+table.sup tr.oos td{opacity:.5}
+table.sup tr.picked td:first-child{box-shadow:inset 3px 0 0 var(--accent-bright)}
+.sName{font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.netv{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+tr.win .netv{color:var(--accent);text-shadow:0 0 18px var(--accent-glow)}
+.tagBest{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;background:linear-gradient(150deg,var(--accent-bright),var(--accent));color:var(--accent-ink);
+  padding:2px 7px;border-radius:5px;box-shadow:0 0 12px var(--accent-glow)}
+.tagBest svg{width:10px;height:10px}
+.tagMine{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--surface-hi);color:var(--ink-soft);padding:2px 7px;border-radius:5px;border:1px solid var(--line-strong)}
+.tagNote{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.04em;background:var(--surface-3);color:var(--ink-faint);padding:2px 7px;border-radius:5px}
+.stat{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;font-family:var(--mono)}
+.stat.in{color:var(--accent)} .stat.oos{color:var(--out)}
+.stat .d{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor}
+.init{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.02em;background:var(--surface-hi);color:var(--ink-soft);
+  min-width:26px;height:22px;padding:0 6px;border-radius:6px;display:inline-grid;place-items:center;border:1px solid var(--line-strong)}
+.tagStale{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.04em;background:var(--low-soft);
+  color:var(--low);padding:2px 6px;border-radius:5px;margin-left:6px;border:1px solid var(--low-line)}
+
+/* basket controls in table */
+.actMuted{font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
+.cartBtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:36px;height:30px;padding:0 10px;
+  border:1px solid var(--accent-line);border-radius:7px;background:var(--accent-soft);color:var(--accent);cursor:pointer;
+  transition:background .13s,border-color .13s,box-shadow .13s}
+.cartBtn svg{width:16px;height:16px}
+.cartBtn:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.cartBtn.ho{color:var(--fast);font-family:var(--mono);font-size:10px;font-weight:700;background:var(--fast-soft);border-color:var(--fast-line)}
+.cartBtn.ho svg{width:14px;height:14px}
+.cartBtn.ho:hover{border-color:var(--fast);box-shadow:0 0 0 3px var(--fast-soft)}
+.stepper{display:inline-flex;align-items:center;gap:1px;border:1px solid var(--accent);border-radius:7px;background:var(--accent-soft);padding:2px}
+.stepper.ho{border-color:var(--fast);background:var(--fast-soft)}
+.stepBtn{width:25px;height:25px;border:0;background:transparent;color:var(--accent);font-size:17px;font-weight:700;line-height:1;
+  cursor:pointer;border-radius:5px;display:grid;place-items:center;transition:background .12s}
+.stepper.ho .stepBtn{color:var(--fast)}
+.stepBtn:hover{background:rgba(255,255,255,.10)}
+.stepNum{width:58px;border:0;background:transparent;text-align:center;font-family:var(--mono);font-size:12.5px;font-weight:700;
+  color:var(--accent);font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.stepper.ho .stepNum{color:var(--fast)}
+.stepNum::-webkit-outer-spin-button,.stepNum::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stepRm{width:21px;height:25px;border:0;background:transparent;color:var(--ink-faint);cursor:pointer;border-radius:5px;font-size:11px;display:grid;place-items:center}
+.stepRm:hover{color:var(--out);background:var(--out-soft)}
+
+.rebFoot{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:11.5px;color:var(--ink-faint);line-height:1.5}
+.rebFoot svg{width:14px;height:14px;flex:none;margin-top:2px;color:var(--accent)}
+.rebFoot b{color:var(--ink-soft);font-weight:650}
+
+.empty{text-align:center;padding:64px 20px;color:var(--ink-faint)}
+.empty svg{width:36px;height:36px;margin-bottom:12px;opacity:.5;color:var(--accent)}
+.empty p{margin:0;font-size:13.5px}
+
+/* ============ DRAWER ============ */
+.scrim{position:fixed;inset:0;background:rgba(4,7,12,.6);opacity:0;pointer-events:none;transition:opacity .22s;z-index:40;backdrop-filter:blur(3px)}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;height:100vh;width:min(480px,94vw);background:var(--surface-1);
+  border-left:1px solid var(--line-strong);box-shadow:var(--shadow-l);z-index:50;
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+}
+.drawer.on{transform:none}
+.dHead{padding:19px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.dHead h2{margin:0;font-size:17px;font-weight:750;letter-spacing:-.015em}
+.dHead p{margin:2px 0 0;font-size:11.5px;color:var(--ink-faint);font-family:var(--mono)}
+.xBtn{margin-left:auto;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-s);width:33px;height:33px;
+  display:grid;place-items:center;cursor:pointer;color:var(--ink-soft);transition:color .13s,border-color .13s}
+.xBtn:hover{color:var(--ink);border-color:var(--line-strong)}
+.xBtn svg{width:16px;height:16px}
+.dBody{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:22px}
+.bSec h3{margin:0 0 3px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:9px}
+.bSec .bd{margin:0 0 11px;font-size:11.5px;color:var(--ink-faint);line-height:1.45}
+.bSec .stripe{width:9px;height:9px;border-radius:3px;flex:none;box-shadow:0 0 8px currentColor}
+.bItem{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-s);margin-bottom:7px}
+.bItem .bi{min-width:0;flex:1}
+.bItem .bn2{font-size:12.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bItem .bm{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-top:2px}
+.bItem .bq{font-family:var(--mono);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.bItem .bq small{display:block;font-size:9.5px;font-weight:500;color:var(--ink-faint)}
+.rm{background:none;border:0;color:var(--ink-faint);cursor:pointer;padding:4px;border-radius:5px;display:grid;place-items:center}
+.rm:hover{color:var(--out);background:var(--out-soft)}
+.rm svg{width:14px;height:14px}
+.bEmpty{font-size:12px;color:var(--ink-faint);font-style:italic;padding:16px;text-align:center;border:1px dashed var(--line-strong);border-radius:var(--r-s)}
+.hoOwner{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:650;color:var(--ink-soft);margin:13px 0 8px}
+.dFoot{padding:16px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:9px;background:var(--surface-2)}
+.totRow{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft)}
+.totRow b{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;font-size:14px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-s);padding:10px 15px;font-family:inherit;font-size:12.5px;
+  font-weight:650;cursor:pointer;border:1px solid transparent;transition:transform .12s,box-shadow .15s,border-color .15s,background .15s}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:15px;height:15px}
+.btn.p{background:linear-gradient(150deg,var(--accent-bright),var(--accent));color:var(--accent-ink)}
+.btn.p:hover{box-shadow:0 0 22px var(--accent-glow)}
+.btn.s{background:var(--surface-3);color:var(--ink);border-color:var(--line-strong)}
+.btn.s:hover{border-color:var(--fast);color:var(--fast)}
+.btn.g{background:none;color:var(--ink-soft);border-color:var(--line)}
+.btn.g:hover{color:var(--ink);border-color:var(--line-strong)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ============ MODAL ============ */
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal.on{opacity:1;pointer-events:auto}
+.mCard{background:var(--surface-1);border:1px solid var(--line-strong);border-radius:var(--r-l);box-shadow:var(--shadow-l);
+  width:min(700px,100%);max-height:86vh;display:flex;flex-direction:column;transform:translateY(10px) scale(.99);transition:transform .22s}
+.modal.on .mCard{transform:none}
+.mHead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.mHead h2{margin:0;font-size:16px;font-weight:750}
+.mHead p{margin:2px 0 0;font-size:11px;color:var(--ink-faint);font-family:var(--mono)}
+.mBody{padding:18px 20px;overflow-y:auto}
+.mFoot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:9px;justify-content:flex-end;background:var(--surface-2)}
+.checkBox{border:1px solid var(--ck);border-radius:var(--r-s);padding:12px 14px;margin-bottom:15px;background:var(--ckb)}
+.checkBox.ok{--ck:var(--accent-line);--ckb:var(--accent-soft)}
+.checkBox.warn{--ck:var(--low-line);--ckb:var(--low-soft)}
+.checkBox.bad{--ck:var(--out-line);--ckb:var(--out-soft)}
+.ckHead{font-size:12.5px;font-weight:700;margin-bottom:5px}
+.checkBox.ok .ckHead{color:var(--accent)} .checkBox.warn .ckHead{color:var(--low)} .checkBox.bad .ckHead{color:var(--out)}
+.checkBox p{margin:0;font-size:12px;color:var(--ink-soft)}
+.checkBox ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.checkBox li{font-size:12px;color:var(--ink-soft);padding-left:18px;position:relative}
+.checkBox li::before{position:absolute;left:0;font-family:var(--mono);font-weight:700;font-size:11px}
+.checkBox li.bad::before{content:"\2715";color:var(--out)}
+.checkBox li.warn::before{content:"!";color:var(--low)}
+.poTbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+.poTbl th{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);text-align:left;padding:8px 11px;border-bottom:1px solid var(--line)}
+.poTbl td{padding:8px 11px;border-bottom:1px solid var(--line);color:var(--ink-soft)}
+.poTbl td.m{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.mailGrp{border:1px solid var(--line);border-radius:var(--r-s);margin-bottom:11px;overflow:hidden}
+.mailGrp .gh{background:var(--surface-2);padding:10px 12px;font-size:12.5px;font-weight:650;display:flex;align-items:center;gap:8px}
+.mailGrp .gh .who{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);font-weight:500}
+.mailGrp ul{margin:0;padding:9px 12px;list-style:none;display:flex;flex-direction:column;gap:6px}
+.mailGrp li{font-size:12px;color:var(--ink-soft);display:flex;gap:8px}
+.mailGrp li .q{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;margin-left:auto}
+
+/* ============ TOAST ============ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);z-index:70;background:var(--surface-hi);color:var(--ink);
+  padding:12px 18px;border-radius:var(--r-m);font-size:13px;font-weight:600;box-shadow:var(--shadow-l);border:1px solid var(--line-strong);
+  display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;max-width:88vw}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast svg{width:17px;height:17px;color:var(--accent)}
+
+/* ---- email template preview ---- */
+.emailTpl{font-size:13px;color:var(--ink)}
+.emHead{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.emRow{display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.emRow:last-child{border-bottom:0}
+.emK{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);width:64px;flex:none;padding-top:2px}
+.emV{color:var(--ink-soft)}
+.emP{margin:0 0 12px;color:var(--ink-soft);line-height:1.55}
+.emTotal{margin:16px 0 12px;padding-top:12px;border-top:1px solid var(--line);text-align:right;color:var(--ink-soft)}
+.emTotal b{font-family:var(--mono);color:var(--accent);font-size:15px;font-variant-numeric:tabular-nums;margin-left:8px}
+.poTbl td .pc{font-family:var(--mono);font-size:10px;color:var(--ink-faint);margin-top:2px}
+
+/* ---- quick-select checkbox + select-all ---- */
+.nameCell{display:flex;align-items:center;gap:12px;min-width:0}
+.pick{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line-strong);background:var(--surface-3);
+  display:grid;place-items:center;cursor:pointer;color:transparent;transition:background .13s,border-color .13s}
+.pick svg{width:12px;height:12px}
+.pick:hover{border-color:var(--accent)}
+.pick.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.pick[data-nopick]{opacity:.35;cursor:not-allowed}
+.selall{align-self:center;display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line-strong);
+  border-radius:8px;padding:6px 11px;cursor:pointer;color:var(--ink-soft);font-size:12px;font-weight:600;
+  transition:border-color .13s,color .13s}
+.selall:hover{border-color:var(--accent);color:var(--ink)}
+.selall .pick{width:16px;height:16px;pointer-events:none}
+.selall.on,.selall.on:hover{border-color:var(--accent);color:var(--ink)}
+.selall.on .pick{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.bown{color:var(--ink-faint);font-weight:500;font-family:var(--mono);font-size:11px;margin-left:6px}
+
+/* ---- my-suppliers editor ---- */
+.rlabRow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-left:2px}
+.rlabBtn{background:none;border:0;color:var(--accent);font-family:inherit;font-size:10.5px;font-weight:600;cursor:pointer;padding:0}
+.rlabBtn:hover{text-decoration:underline}
+.supGrid{display:grid;grid-template-columns:1fr;gap:7px}
+@media (min-width:560px){.supGrid{grid-template-columns:1fr 1fr}}
+.supToggle{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+  color:var(--ink);font-family:inherit;transition:border-color .13s,background .13s}
+.supToggle:hover{border-color:var(--line-strong)}
+.supToggle.on{border-color:var(--accent);background:var(--accent-soft)}
+.supToggleName{font-size:13px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.supToggleOwner{font-family:var(--mono);font-size:9.5px;color:var(--ink-faint);flex:none}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1120px){
+  .rHead{grid-template-columns:minmax(170px,2fr) 80px minmax(140px,1.2fr) minmax(140px,1.1fr) 28px}
+  .rHead .sparkCell{display:none}
+}
+
+/* ---- collapse the side rail into a stacked top header ---- */
+@media (max-width:900px){
+  html,body{overflow-x:hidden}
+  .cockpit{grid-template-columns:1fr;overflow-x:hidden}
+  .rail{
+    position:static;height:auto;overflow:visible;
+    flex-direction:column;gap:15px;padding:15px 18px;
+    border-right:0;border-bottom:1px solid var(--line);
+  }
+  .brand{padding:0 2px 1px;border-bottom:0}
+  .buyerCard,.sel{width:100%}
+  nav.secs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .secBtn{width:100%}
+  .railfoot{margin-top:0;border-top:0;padding-top:0}
+  .topbar{gap:14px}
+  .search{margin-left:0;width:100%;min-width:0}
+  .kpis{grid-template-columns:repeat(2,1fr);padding-top:18px}
+  .topbar,.kpis,.listwrap{padding-left:18px;padding-right:18px}
+}
+
+/* ---- phone: stack the product-row metrics so nothing is clipped.
+   Name, days-left status and best-net price always stay visible. ---- */
+@media (max-width:620px){
+  .rHead{
+    display:flex;flex-wrap:wrap;align-items:center;gap:9px 18px;
+    padding:13px 42px 14px 16px;position:relative;
+  }
+  .rHead>div{min-width:0}
+  .rHead>div:first-child{flex:1 1 100%}     /* name + code : own top row */
+  .rHead>div:nth-child(2){flex:0 0 auto}    /* stock */
+  .rHead .coverCell{flex:0 1 auto}          /* days-left number + badge */
+  .rHead .bestCell{flex:1 1 100%}           /* best net : own row, always visible */
+  .rHead .sparkCell{display:none}
+  .gauge{display:none}                       /* drop gauge bar; keep days number + badge */
+  .coverRow{margin-bottom:0}
+  .chev{position:absolute;top:15px;right:15px}
+  .kpi .kpi-v{font-size:32px}
+  .recPanel{margin-top:13px}
+}
+
+/* ---- very narrow: tighten gutters so content never touches the edge ---- */
+@media (max-width:400px){
+  .topbar,.kpis,.listwrap{padding-left:14px;padding-right:14px}
+  .bodyPad{padding-left:14px;padding-right:14px}
+  .kpi{padding:13px 13px 14px}
+}
+/* ================= demo login (one-tap role picker) ================= */
+.login{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(1100px 640px at 50% -12%,rgba(56,214,198,.10),transparent 62%),var(--bg)}
+.login.off{display:none}
+.loginCard{width:min(540px,100%);background:var(--surface-1);border:1px solid var(--line);border-radius:18px;
+  padding:26px 26px 22px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.loginMk{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.loginMk .mk{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:var(--accent);color:var(--accent-ink)}
+.loginMk .mk svg{width:22px;height:22px}
+.loginKicker{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.loginTitle{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-top:2px}
+.loginLead{color:var(--ink-soft);font-size:13.5px;line-height:1.55;margin:0 0 16px}
+.loginGrid{display:grid;gap:10px}
+.loginPick{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  transition:background .15s,border-color .15s,transform .1s}
+.loginPick:hover{background:var(--surface-hi);border-color:var(--accent-line);transform:translateY(-1px)}
+.loginAv{width:38px;height:38px;flex:none;border-radius:10px;display:grid;place-items:center;font-family:var(--mono);
+  font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)}
+.loginWho{display:flex;flex-direction:column;gap:2px}
+.loginNm{font-weight:650;font-size:14.5px}
+.loginSub{color:var(--ink-faint);font-size:11.5px;font-family:var(--mono)}
+.loginFoot{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);color:var(--ink-faint);font-size:11.5px;line-height:1.5}
+.switchBtn{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+  border-radius:8px;padding:4px 9px;font-size:10.5px;cursor:pointer;transition:color .15s,border-color .15s}
+.switchBtn:hover{border-color:var(--accent-line);color:var(--accent)}
+</style>
+
+<div class="cockpit">
+  <!-- ================= RAIL ================= -->
+  <aside class="rail">
+    <div class="brand">
+      <span class="mk" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h11"/><circle cx="19" cy="18" r="3"/></svg>
+      </span>
+      <div>
+        <div class="nm">Buyer Cockpit</div>
+        <div class="sb">Replenishment</div>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <span class="rlab">Buyer</span>
+      <div class="buyerCard">
+        <span class="av" id="buyerAv">OP</span>
+        <div>
+          <div class="bn" id="buyerName">Omkar Patil</div>
+          <div class="br" id="buyerRole">5 supplier accounts</div>
+        </div>
+        <button class="switchBtn" id="switchBuyer" title="Sign in as a different buyer">Switch</button>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <div class="rlabRow"><span class="rlab">Supplier filter</span><button class="rlabBtn" id="editSups" title="Choose which suppliers you're contracted with">Select my suppliers</button></div>
+      <select class="sel" id="supSel" aria-label="Filter by supplier"></select>
+    </div>
+
+    <div class="rgroup">
+      <span class="rlab">Sections</span>
+      <nav class="secs" id="secNav"></nav>
+    </div>
+
+    <div class="railfoot">
+      <button class="basketBtn" id="openBasket">
+        <div>
+          <div class="bt">Basket</div>
+          <div class="bs" id="basketSub">Nothing selected</div>
+        </div>
+        <span class="pillN zero" id="basketCount">0</span>
+      </button>
+      <div class="railNote">Sample data · net price = list price after annual rebate.</div>
+    </div>
+  </aside>
+
+  <!-- ================= STAGE ================= -->
+  <main class="stage">
+    <header class="topbar">
+      <div class="tb-title">
+        <h1>Replenishment queue</h1>
+        <p class="meta"><b class="accn" id="attnCount">15</b> products need attention · <b id="supCount">5</b> suppliers assigned<span id="filterNote"></span></p>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Search product or code…" aria-label="Search products">
+      </div>
+    </header>
+
+    <section class="kpis" id="tiles"></section>
+
+    <section class="listwrap">
+      <div class="listhead">
+        <h2 id="listTitle">Under 14 days</h2>
+        <span class="hint">Tick the lines you need</span>
+        <button class="selall" id="selAll" aria-pressed="false">
+          <span class="pick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>
+          <span id="selAllTxt">Select all</span>
+        </button>
+      </div>
+      <div id="list"></div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- ================= BASKET DRAWER ================= -->
+<aside class="drawer" id="drawer" aria-label="Basket">
+  <div class="dHead">
+    <div>
+      <h2>Basket</h2>
+      <p id="drawerSub">Ready to send</p>
+    </div>
+    <button class="xBtn" id="closeDrawer" aria-label="Close basket">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="dBody" id="basketBody"></div>
+  <div class="dFoot">
+    <div class="totRow"><span>Basket total</span><b id="poVal">£0.00</b></div>
+    <button class="btn p" id="sendMail" style="justify-content:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      Email basket to buyers
+    </button>
+  </div>
+</aside>
+
+<!-- ================= MODAL ================= -->
+<div class="modal" id="modal">
+  <div class="mCard">
+    <div class="mHead">
+      <div>
+        <h2 id="mTitle">Email to buyers</h2>
+        <p id="mSub">A clear template — ready to send</p>
+      </div>
+      <button class="xBtn" id="closeModal" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="mBody" id="mBody"></div>
+    <div class="mFoot">
+      <button class="btn g" id="mCancel">Close</button>
+      <button class="btn p" id="mConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ================= DEMO LOGIN (one-tap role picker) ================= -->
+<div class="login" id="login" role="dialog" aria-modal="true" aria-label="Choose your buyer">
+  <div class="loginCard">
+    <div class="loginMk">
+      <span class="mk" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h11"/><circle cx="19" cy="18" r="3"/></svg>
+      </span>
+      <div>
+        <div class="loginKicker">Buyer Cockpit</div>
+        <div class="loginTitle">Choose your buyer</div>
+      </div>
+    </div>
+    <p class="loginLead">Preview build with illustrative data. Pick a buyer to enter the cockpit &mdash; no password needed.</p>
+    <div class="loginGrid" id="loginGrid"></div>
+    <div class="loginFoot">Demo only &middot; sample data &middot; the tool never writes to Buying History or the PO system &mdash; it produces an email.</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- rebate file (today: a manual spreadsheet) ---------- */
+const REBATE = {
+  "Alloga UK Limited":8,"Genesis Pharmaceuticals":13,"Crescent Pharma":9,"Bristol Laboratories":6,
+  "Teva UK Limited":6,"Medley Pharma":5,"Mawdsley-Brooks":4,"Milpharm Ltd":6,"Accord-UK Limited":10,
+  "Brown & Burk UK":5,"Medreich PLC":7,
+  "Aurobindo Pharma":11,"Zentiva":12,"Sandoz":9,"Wockhardt UK":8,"Morningside":10,"Ennogen Pharma":6
+};
+/* the logged-in buyer, and which supplier accounts each buyer owns
+   (from the "Modified By" initials in Buying History) */
+let BUYER = "Omkar";   /* set by the demo role picker */
+const OWNER = {
+  "Crescent Pharma":"Omkar","Genesis Pharmaceuticals":"Omkar","Alloga UK Limited":"Omkar",
+  "Bristol Laboratories":"Omkar","Teva UK Limited":"Omkar",
+  "Accord-UK Limited":"Rob","Medley Pharma":"Denalka","Mawdsley-Brooks":"Matt",
+  "Milpharm Ltd":"Zain","Brown & Burk UK":"Matt","Medreich PLC":"Matt",
+  "Aurobindo Pharma":"Rob","Zentiva":"Matt","Sandoz":"Denalka","Wockhardt UK":"Zain",
+  "Morningside":"Matt","Ennogen Pharma":"Rob"
+};
+const INIT = {Rob:"RO",Matt:"MA",Omkar:"OM",Denalka:"DE",Zain:"ZA"};
+/* a buyer's assigned suppliers = the accounts they own (illustrative for the demo) */
+/* Everyone sees the full supplier list. The buyer freely SELECTS which ones
+   they're contracted with — that marks them "mine". A supplier the buyer
+   hasn't selected shows its default owner (or "unassigned" if that was the
+   buyer). Persisted; never writes to Buying History — the tool only emails. */
+const ALL_SUPPLIERS = Object.keys(OWNER);
+const DEFAULT_OWNER = Object.assign({}, OWNER);   // base owner per supplier
+const mineKey = () => "cockpit-mine-" + BUYER;
+function loadMine(){
+  try{ const raw=localStorage.getItem(mineKey());
+    if(raw){ return new Set(JSON.parse(raw).filter(n=>ALL_SUPPLIERS.includes(n))); } }catch(e){}
+  return new Set(ALL_SUPPLIERS.filter(n=>DEFAULT_OWNER[n]===BUYER));
+}
+function saveMine(){ try{ localStorage.setItem(mineKey(), JSON.stringify([...MINE])); }catch(e){} }
+let MINE = loadMine();
+const isMine    = name => MINE.has(name);
+const ownerOf   = name => isMine(name) ? BUYER : (DEFAULT_OWNER[name]!==BUYER ? DEFAULT_OWNER[name] : "");
+const ownerInit = name => { const o=ownerOf(name); return (o && INIT[o]) ? INIT[o] : "—"; };
+const short  = name => name.split(" ")[0];
+const esc    = t => String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+const s = (name,price,stock,date,oos=false,note="") =>
+  ({name,price,rebate:REBATE[name]??0,stock,date,oos,note,owner:OWNER[name],init:INIT[OWNER[name]]});
+
+/* ---------- product data ----------
+   Stock / prices / suppliers / monthly sales mirror the Buying History screens.
+   daysCover is the forecast output (illustrative).                              */
+const DATA = [
+ {code:"4675A",name:"Ramipril 2.5mg Capsules 28",cat:"Generics",sec:"low",
+  stock:35317,newcastle:0,onOrder:93400,daysCover:10,avgDaily:3640,
+  m:[53804,44744,128913,151303,202362,70976,98717,83357,168519,102766,118937,95690,73147],
+  sup:[s("Alloga UK Limited",0.38,45000,"25-06-2026",false,"Ipca"),s("Brown & Burk UK",0.39,12000,"02-07-2026"),
+       s("Crescent Pharma",0.40,9216,"13-07-2026"),s("Medreich PLC",0.41,0,"19-05-2026"),
+       s("Teva UK Limited",0.42,30000,"08-07-2026"),s("Bristol Laboratories",0.44,6750,"06-05-2026"),
+       s("Accord-UK Limited",1.00,0,"26-06-2026",true)]},
+
+ {code:"0128",name:"Atenolol 100mg Tablets 28",cat:"Generics",sec:"slow",
+  stock:12336,newcastle:0,onOrder:20,daysCover:98,avgDaily:126,
+  m:[7683,7098,9163,9011,3552,2584,4241,5295,2898,7613,2040,5644,2275],
+  sup:[s("Milpharm Ltd",0.14,0,"19-03-2025",true),s("Alloga UK Limited",0.23,5760,"25-06-2026",false,"Ipca"),
+       s("Genesis Pharmaceuticals",0.24,8640,"08-05-2026"),s("Mawdsley-Brooks",0.27,0,"19-11-2025"),
+       s("Medley Pharma",0.28,6400,"21-07-2026"),s("Crescent Pharma",0.50,9216,"13-07-2026"),
+       s("Bristol Laboratories",0.50,20,"06-05-2026")]},
+
+ {code:"2211B",name:"Amlodipine 5mg Tablets 28",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:1520,
+  m:[44100,45800,43200,46500,44900,45600,43800,46200,45100,44700,45900,46800,21400],
+  sup:[s("Genesis Pharmaceuticals",0.29,15000,"11-07-2026"),s("Milpharm Ltd",0.28,0,"04-02-2026",true),
+       s("Crescent Pharma",0.31,22000,"13-07-2026"),s("Teva UK Limited",0.33,40000,"09-07-2026"),
+       s("Accord-UK Limited",0.34,8000,"26-06-2026")]},
+
+ {code:"3390C",name:"Omeprazole 20mg Capsules 28",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:2100,
+  m:[62000,60500,63400,61800,64200,62700,63900,61500,64800,63100,62400,65200,28700],
+  sup:[s("Alloga UK Limited",0.61,18000,"25-06-2026",false,"Ipca"),s("Bristol Laboratories",0.64,9000,"06-05-2026"),
+       s("Crescent Pharma",0.66,0,"13-07-2026",true),s("Medreich PLC",0.69,5000,"19-05-2026"),
+       s("Accord-UK Limited",0.72,12000,"26-06-2026")]},
+
+ {code:"1180D",name:"Simvastatin 40mg Tablets 28",cat:"Generics",sec:"low",
+  stock:8400,newcastle:0,onOrder:0,daysCover:6,avgDaily:1400,
+  m:[31200,30800,32100,31500,32800,31900,32400,31100,33200,32600,31800,33500,32900],
+  sup:[s("Genesis Pharmaceuticals",0.21,6000,"08-05-2026"),s("Milpharm Ltd",0.20,0,"22-01-2026",true),
+       s("Crescent Pharma",0.22,14000,"13-07-2026"),s("Medley Pharma",0.24,3000,"21-07-2026"),
+       s("Teva UK Limited",0.26,20000,"08-07-2026")]},
+
+ {code:"0942E",name:"Metformin 500mg Tablets 28",cat:"Generics",sec:"low",
+  stock:26500,newcastle:0,onOrder:15000,daysCover:12,avgDaily:2210,
+  m:[58000,57200,59100,58600,60200,59400,58900,60100,59700,58300,60800,59200,60400],
+  sup:[s("Alloga UK Limited",0.18,5000,"25-06-2026",false,"Ipca"),s("Crescent Pharma",0.19,30000,"13-07-2026"),
+       s("Bristol Laboratories",0.20,12000,"06-05-2026"),s("Teva UK Limited",0.21,25000,"08-07-2026")]},
+
+ {code:"5521F",name:"Sertraline 50mg Tablets 28",cat:"Generics",sec:"fast",
+  stock:19200,newcastle:0,onOrder:0,daysCover:10,avgDaily:1947,
+  m:[22000,21500,23000,22400,24100,21900,23500,22800,24000,23200,25100,26800,58400],
+  sup:[s("Accord-UK Limited",0.84,14000,"26-06-2026"),s("Brown & Burk UK",0.86,4000,"02-07-2026"),
+       s("Crescent Pharma",0.88,8000,"13-07-2026"),s("Teva UK Limited",0.91,22000,"08-07-2026")]},
+
+ {code:"0771G",name:"Levothyroxine 100mcg Tablets 28",cat:"Generics",sec:"low",
+  stock:11800,newcastle:0,onOrder:0,daysCover:8,avgDaily:1475,
+  m:[26400,25900,27100,26700,27800,26300,27500,26900,28100,27400,26800,28300,27600],
+  sup:[s("Alloga UK Limited",1.10,7000,"25-06-2026",false,"Ipca"),s("Teva UK Limited",1.08,16000,"08-07-2026"),
+       s("Crescent Pharma",1.12,9000,"13-07-2026"),s("Accord-UK Limited",1.15,5000,"26-06-2026")]},
+
+ {code:"4102H",name:"Bisoprolol 2.5mg Tablets 28",cat:"Generics",sec:"fast",
+  stock:31000,newcastle:0,onOrder:0,daysCover:13,avgDaily:2385,
+  m:[33200,32800,34100,33600,34800,33900,34400,33100,35200,34600,33800,35500,71200],
+  sup:[s("Genesis Pharmaceuticals",0.25,11000,"08-05-2026"),s("Crescent Pharma",0.26,18000,"13-07-2026"),
+       s("Bristol Laboratories",0.27,7000,"06-05-2026"),s("Medley Pharma",0.28,4000,"21-07-2026")]},
+
+ {code:"6640J",name:"Gabapentin 300mg Capsules 100",cat:"Generics",sec:"slow",
+  stock:44000,newcastle:0,onOrder:0,daysCover:120,avgDaily:367,
+  m:[18200,17900,18600,18100,19200,18700,17400,16200,14800,12100,9400,7200,5100],
+  sup:[s("Medreich PLC",2.30,8000,"19-05-2026"),s("Crescent Pharma",2.40,12000,"13-07-2026"),
+       s("Accord-UK Limited",2.45,6000,"26-06-2026"),s("Teva UK Limited",2.55,15000,"08-07-2026")]},
+
+ {code:"1330K",name:"Furosemide 40mg Tablets 28",cat:"Generics",sec:"low",
+  stock:6200,newcastle:0,onOrder:0,daysCover:5,avgDaily:1240,
+  m:[21000,20600,21800,21200,22400,21700,22100,20900,22800,22200,21500,22900,22300],
+  sup:[s("Milpharm Ltd",0.15,0,"11-03-2026",true),s("Crescent Pharma",0.16,20000,"13-07-2026"),
+       s("Alloga UK Limited",0.17,9000,"25-06-2026",false,"Ipca"),s("Medley Pharma",0.18,5000,"21-07-2026")]},
+
+ {code:"2870L",name:"Citalopram 20mg Tablets 28",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:1030,
+  m:[29000,28600,29800,29200,30400,29700,30100,28900,30800,30200,29500,30900,13600],
+  sup:[s("Genesis Pharmaceuticals",0.32,8000,"08-05-2026"),s("Crescent Pharma",0.34,12000,"13-07-2026"),
+       s("Teva UK Limited",0.36,18000,"08-07-2026")]},
+
+ {code:"5015M",name:"Lansoprazole 30mg Capsules 28",cat:"Generics",sec:"slow",
+  stock:38000,newcastle:0,onOrder:0,daysCover:150,avgDaily:253,
+  m:[41000,40200,42100,41500,39800,36200,32400,28900,24100,19800,15200,11400,8900],
+  sup:[s("Alloga UK Limited",0.39,11000,"25-06-2026",false,"Ipca"),s("Bristol Laboratories",0.40,6000,"06-05-2026"),
+       s("Crescent Pharma",0.42,14000,"13-07-2026")]},
+
+ {code:"3721N",name:"Naproxen 500mg Tablets 28",cat:"Generics",sec:"low",
+  stock:15400,newcastle:0,onOrder:0,daysCover:13,avgDaily:1185,
+  m:[17200,16800,17900,17400,18600,17900,18300,17100,18900,18400,17700,19100,18500],
+  sup:[s("Crescent Pharma",0.54,10000,"13-07-2026"),s("Medley Pharma",0.52,6000,"21-07-2026"),
+       s("Accord-UK Limited",0.56,9000,"26-06-2026"),s("Teva UK Limited",0.58,14000,"08-07-2026")]},
+
+ {code:"4488P",name:"Doxycycline 100mg Capsules 8",cat:"Generics",sec:"fast",
+  stock:9100,newcastle:0,onOrder:0,daysCover:7,avgDaily:1300,
+  m:[8200,7900,8600,8100,9200,8700,8400,7900,9100,8600,8200,9400,24800],
+  sup:[s("Accord-UK Limited",1.28,9000,"26-06-2026"),s("Crescent Pharma",1.35,6000,"13-07-2026"),
+       s("Bristol Laboratories",1.40,4000,"06-05-2026")]},
+
+ /* ---- 25 additional community-pharmacy lines; best-net ownership is mixed
+    (for most lines the cheapest net belongs to another buyer's account) ---- */
+ {code:"A118",name:"Amoxicillin 500mg Capsules 21",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:1800,
+  m:[59100,47300,57500,62900,66300,66200,55700,53200,52200,53400,48600,54800,27460],
+  sup:[
+       s("Accord-UK Limited",0.86,20000,"05-07-2026"),s("Aurobindo Pharma",0.99,14000,"18-06-2026"),
+       s("Genesis Pharmaceuticals",0.95,9000,"24-06-2026"),s("Bristol Laboratories",0.92,6000,"06-05-2026"),
+       s("Teva UK Limited",0.90,12000,"08-07-2026"),s("Crescent Pharma",1.05,0,"13-07-2026",true)]},
+
+ {code:"C275",name:"Clopidogrel 75mg Tablets 28",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:1400,
+  m:[43500,40900,45100,44000,49900,45800,49800,45100,40500,37900,41100,39800,28442],
+  sup:[
+       s("Aurobindo Pharma",1.15,9000,"02-07-2026"),s("Genesis Pharmaceuticals",1.18,7000,"24-06-2026"),
+       s("Zentiva",1.20,11000,"15-07-2026"),s("Teva UK Limited",1.22,8000,"08-07-2026"),
+       s("Accord-UK Limited",1.30,5000,"26-06-2026")]},
+
+ {code:"S430",name:"Salbutamol 100mcg Inhaler",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:900,
+  m:[29700,27500,28100,28100,30600,29300,31100,29500,27400,27000,27000,27700,21835],
+  sup:[
+       s("Zentiva",1.55,9000,"10-07-2026"),s("Aurobindo Pharma",1.60,6000,"18-06-2026"),
+       s("Alloga UK Limited",1.58,7000,"25-06-2026",false,"Ipca"),s("Teva UK Limited",1.62,10000,"08-07-2026"),
+       s("Accord-UK Limited",1.70,4000,"26-06-2026"),s("Crescent Pharma",1.75,0,"12-03-2026",true)]},
+
+ {code:"K960",name:"Co-codamol 30/500mg Tablets 100",cat:"Ethical",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:700,
+  m:[22200,19800,21200,21400,24400,23100,21700,23500,20400,18100,21100,22600,12661],
+  sup:[
+       s("Milpharm Ltd",2.00,8000,"28-05-2026"),s("Aurobindo Pharma",2.15,6000,"18-06-2026"),
+       s("Zentiva",2.20,9000,"15-07-2026"),s("Crescent Pharma",2.25,5000,"13-07-2026"),
+       s("Teva UK Limited",2.30,7000,"08-07-2026")]},
+
+ {code:"T210",name:"Trimethoprim 200mg Tablets 14",cat:"Generics",sec:"out",
+  stock:0,newcastle:0,onOrder:0,daysCover:0,avgDaily:1000,
+  m:[28300,31100,34000,32500,31400,33100,30800,30200,30800,26500,28700,29200,22007],
+  sup:[
+       s("Sandoz",0.70,14000,"05-07-2026"),s("Genesis Pharmaceuticals",0.74,8000,"24-06-2026"),
+       s("Alloga UK Limited",0.71,6000,"25-06-2026",false,"Ipca"),s("Accord-UK Limited",0.76,9000,"26-06-2026"),
+       s("Crescent Pharma",0.78,0,"13-07-2026",true)]},
+
+ {code:"P505",name:"Prednisolone 5mg Tablets 28",cat:"Generics",sec:"fast",
+  stock:32000,newcastle:0,onOrder:0,daysCover:20,avgDaily:1600,
+  m:[44900,47600,43800,51700,53600,56000,47700,48800,41700,44300,43400,51200,84636],
+  sup:[
+       s("Medley Pharma",0.38,6000,"21-07-2026"),s("Genesis Pharmaceuticals",0.44,9000,"24-06-2026"),
+       s("Alloga UK Limited",0.42,7000,"25-06-2026",false,"Ipca"),s("Accord-UK Limited",0.43,8000,"26-06-2026"),
+       s("Crescent Pharma",0.45,10000,"13-07-2026")]},
+
+ {code:"Z118",name:"Cetirizine 10mg Tablets 30",cat:"OTC",sec:"fast",
+  stock:22500,newcastle:0,onOrder:0,daysCover:25,avgDaily:900,
+  m:[23100,26200,27300,29000,28000,31300,26900,26100,26400,28200,24300,25500,50438],
+  sup:[
+       s("Morningside",0.60,12000,"10-07-2026"),s("Genesis Pharmaceuticals",0.64,8000,"24-06-2026"),
+       s("Zentiva",0.63,9000,"15-07-2026"),s("Alloga UK Limited",0.62,7000,"25-06-2026",false,"Ipca"),
+       s("Accord-UK Limited",0.66,6000,"26-06-2026")]},
+
+ {code:"M710",name:"Montelukast 10mg Tablets 28",cat:"Generics",sec:"fast",
+  stock:23100,newcastle:0,onOrder:0,daysCover:22,avgDaily:1050,
+  m:[30400,28500,34200,29800,36000,36600,34300,30700,29800,31200,27500,30600,60931],
+  sup:[
+       s("Brown & Burk UK",1.05,8000,"02-07-2026"),s("Genesis Pharmaceuticals",1.18,7000,"24-06-2026"),
+       s("Aurobindo Pharma",1.15,9000,"18-06-2026"),s("Crescent Pharma",1.20,10000,"13-07-2026"),
+       s("Accord-UK Limited",1.25,5000,"26-06-2026")]},
+
+ {code:"F330",name:"Fluoxetine 20mg Capsules 30",cat:"Generics",sec:"fast",
+  stock:30000,newcastle:0,onOrder:0,daysCover:30,avgDaily:1000,
+  m:[26000,27200,27300,29900,31700,33600,29400,30100,30200,30000,26800,31700,60707],
+  sup:[
+       s("Wockhardt UK",0.66,12000,"05-07-2026"),s("Genesis Pharmaceuticals",0.70,8000,"24-06-2026"),
+       s("Zentiva",0.72,9000,"15-07-2026"),s("Alloga UK Limited",0.68,7000,"25-06-2026",false,"Ipca"),
+       s("Accord-UK Limited",0.72,6000,"26-06-2026")]},
+
+ {code:"N140",name:"Nitrofurantoin 100mg Capsules 28",cat:"Generics",sec:"fast",
+  stock:21600,newcastle:0,onOrder:0,daysCover:18,avgDaily:1200,
+  m:[36200,30200,36400,33600,35000,39000,36800,37700,32700,31000,37600,34800,65763],
+  sup:[
+       s("Teva UK Limited",1.40,15000,"08-07-2026"),s("Aurobindo Pharma",1.48,9000,"18-06-2026"),
+       s("Zentiva",1.50,8000,"15-07-2026"),s("Accord-UK Limited",1.55,6000,"26-06-2026"),
+       s("Sandoz",1.52,7000,"05-07-2026")]},
+
+ {code:"W303",name:"Warfarin 3mg Tablets 28",cat:"Generics",sec:"slow",
+  stock:21000,newcastle:0,onOrder:0,daysCover:70,avgDaily:300,
+  m:[16200,12400,14800,13100,13500,13300,11400,9000,7300,6800,6200,5100,3950],
+  sup:[
+       s("Medreich PLC",0.66,8000,"19-05-2026"),s("Crescent Pharma",0.70,10000,"13-07-2026"),
+       s("Genesis Pharmaceuticals",0.72,7000,"24-06-2026"),s("Accord-UK Limited",0.74,6000,"26-06-2026"),
+       s("Teva UK Limited",0.76,9000,"08-07-2026")]},
+
+ {code:"D505",name:"Diazepam 5mg Tablets 28",cat:"Ethical",sec:"slow",
+  stock:20900,newcastle:0,onOrder:0,daysCover:95,avgDaily:220,
+  m:[10700,9900,9800,9200,10300,8700,7900,6500,5500,4500,4700,3500,2684],
+  sup:[
+       s("Mawdsley-Brooks",0.52,7000,"18-06-2026"),s("Crescent Pharma",0.56,9000,"13-07-2026"),
+       s("Genesis Pharmaceuticals",0.60,6000,"24-06-2026"),s("Accord-UK Limited",0.58,5000,"26-06-2026"),
+       s("Teva UK Limited",0.57,8000,"08-07-2026")]},
+
+ {code:"R650",name:"Tramadol 50mg Capsules 100",cat:"Ethical",sec:"slow",
+  stock:22000,newcastle:0,onOrder:0,daysCover:110,avgDaily:200,
+  m:[10000,9800,8700,8800,9400,7700,6500,6300,5500,5000,3700,3400,2365],
+  sup:[
+       s("Ennogen Pharma",1.85,6000,"18-06-2026"),s("Accord-UK Limited",1.95,9000,"26-06-2026"),
+       s("Zentiva",2.00,8000,"15-07-2026"),s("Crescent Pharma",2.05,7000,"13-07-2026"),
+       s("Teva UK Limited",2.10,10000,"08-07-2026")]},
+
+ {code:"V440",name:"Pravastatin 40mg Tablets 28",cat:"Generics",sec:"slow",
+  stock:22500,newcastle:0,onOrder:0,daysCover:90,avgDaily:250,
+  m:[12500,10300,11500,10300,10100,10400,9600,7000,6700,5300,4600,4800,3367],
+  sup:[
+       s("Aurobindo Pharma",1.05,8000,"18-06-2026"),s("Genesis Pharmaceuticals",1.08,7000,"24-06-2026"),
+       s("Zentiva",1.10,9000,"15-07-2026"),s("Bristol Laboratories",1.06,6000,"06-05-2026"),
+       s("Accord-UK Limited",1.15,5000,"26-06-2026")]},
+
+ {code:"Q808",name:"Candesartan 8mg Tablets 28",cat:"Generics",sec:"slow",
+  stock:20400,newcastle:0,onOrder:0,daysCover:85,avgDaily:240,
+  m:[11400,9800,11300,11200,9800,10600,8800,7800,6900,5300,5000,3900,2972],
+  sup:[
+       s("Alloga UK Limited",0.98,11000,"25-06-2026",false,"Ipca"),s("Aurobindo Pharma",1.05,8000,"18-06-2026"),
+       s("Zentiva",1.04,9000,"15-07-2026"),s("Accord-UK Limited",1.08,6000,"26-06-2026"),
+       s("Medreich PLC",1.02,7000,"19-05-2026")]},
+
+ {code:"L210",name:"Lisinopril 10mg Tablets 28",cat:"Generics",sec:"low",
+  stock:11700,newcastle:0,onOrder:0,daysCover:9,avgDaily:1300,
+  m:[37900,40100,42300,39200,47400,49400,44300,40100,36100,37800,35000,34500,35874],
+  sup:[
+       s("Zentiva",0.78,16000,"15-07-2026"),s("Genesis Pharmaceuticals",0.80,9000,"24-06-2026"),
+       s("Alloga UK Limited",0.82,7000,"25-06-2026",false,"Ipca"),s("Accord-UK Limited",0.83,8000,"26-06-2026"),
+       s("Crescent Pharma",0.86,10000,"13-07-2026")]},
+
+ {code:"T202",name:"Atorvastatin 20mg Tablets 28",cat:"Generics",sec:"low",
+  stock:26400,newcastle:0,onOrder:0,daysCover:11,avgDaily:2400,
+  m:[77400,71600,71400,74700,82700,78400,77400,75900,73400,61900,72200,67500,73803],
+  sup:[
+       s("Genesis Pharmaceuticals",0.98,14000,"24-06-2026"),s("Aurobindo Pharma",1.02,9000,"18-06-2026"),
+       s("Zentiva",1.00,8000,"15-07-2026"),s("Teva UK Limited",0.95,12000,"08-07-2026"),
+       s("Accord-UK Limited",1.10,6000,"26-06-2026"),s("Sandoz",1.05,7000,"05-07-2026")]},
+
+ {code:"P100",name:"Paracetamol 500mg Tablets 100",cat:"OTC",sec:"low",
+  stock:24000,newcastle:0,onOrder:0,daysCover:8,avgDaily:3000,
+  m:[81700,82700,98400,107900,94700,107600,102600,87000,93800,94000,85000,96800,103406],
+  sup:[
+       s("Sandoz",0.88,20000,"05-07-2026"),s("Teva UK Limited",0.90,15000,"08-07-2026"),
+       s("Bristol Laboratories",0.92,9000,"06-05-2026"),s("Accord-UK Limited",0.95,8000,"26-06-2026"),
+       s("Zentiva",0.96,10000,"15-07-2026")]},
+
+ {code:"R525",name:"Ramipril 5mg Capsules 28",cat:"Generics",sec:"low",
+  stock:22400,newcastle:0,onOrder:0,daysCover:7,avgDaily:3200,
+  m:[90900,96600,106300,111100,118000,101200,96400,100200,86400,98200,88800,94300,96661],
+  sup:[
+       s("Accord-UK Limited",0.46,20000,"26-06-2026"),s("Alloga UK Limited",0.47,7000,"25-06-2026",false,"Ipca"),
+       s("Crescent Pharma",0.48,9000,"13-07-2026"),s("Genesis Pharmaceuticals",0.50,6000,"24-06-2026"),
+       s("Brown & Burk UK",0.49,8000,"02-07-2026"),s("Teva UK Limited",0.52,10000,"08-07-2026")]},
+
+ {code:"L550",name:"Losartan 50mg Tablets 28",cat:"Generics",sec:"low",
+  stock:15000,newcastle:0,onOrder:0,daysCover:10,avgDaily:1500,
+  m:[48700,43900,46100,51800,47700,56900,50900,43900,48300,46800,39400,40600,47093],
+  sup:[
+       s("Morningside",0.76,12000,"10-07-2026"),s("Genesis Pharmaceuticals",0.80,9000,"24-06-2026"),
+       s("Zentiva",0.79,8000,"15-07-2026"),s("Alloga UK Limited",0.82,7000,"25-06-2026",false,"Ipca"),
+       s("Accord-UK Limited",0.85,6000,"26-06-2026")]},
+
+ {code:"A210",name:"Amlodipine 10mg Tablets 28",cat:"Generics",sec:"low",
+  stock:14400,newcastle:0,onOrder:0,daysCover:9,avgDaily:1600,
+  m:[52000,45200,50200,49700,56300,58500,52500,45900,42900,44300,44700,47700,51691],
+  sup:[
+       s("Milpharm Ltd",0.30,18000,"05-07-2026"),s("Crescent Pharma",0.31,10000,"13-07-2026"),
+       s("Genesis Pharmaceuticals",0.33,7000,"24-06-2026"),s("Alloga UK Limited",0.32,8000,"25-06-2026",false,"Ipca"),
+       s("Teva UK Limited",0.33,9000,"08-07-2026")]},
+
+ {code:"A075",name:"Aspirin 75mg Tablets 28",cat:"OTC",sec:"low",
+  stock:13200,newcastle:0,onOrder:0,daysCover:11,avgDaily:1200,
+  m:[37900,34400,37100,40000,38800,43400,42800,37300,36600,34000,34700,36800,35310],
+  sup:[
+       s("Medley Pharma",0.62,10000,"21-07-2026"),s("Crescent Pharma",0.66,9000,"13-07-2026"),
+       s("Genesis Pharmaceuticals",0.68,7000,"24-06-2026"),s("Alloga UK Limited",0.65,8000,"25-06-2026",false,"Ipca"),
+       s("Accord-UK Limited",0.70,6000,"26-06-2026")]},
+
+ {code:"I484",name:"Ibuprofen 400mg Tablets 84",cat:"OTC",sec:"low",
+  stock:22800,newcastle:0,onOrder:0,daysCover:12,avgDaily:1900,
+  m:[57900,57200,54200,63700,62500,70500,66300,56600,54200,50300,52700,51900,57399],
+  sup:[
+       s("Zentiva",1.02,14000,"15-07-2026"),s("Genesis Pharmaceuticals",1.05,9000,"24-06-2026"),
+       s("Aurobindo Pharma",1.06,8000,"18-06-2026"),s("Teva UK Limited",1.00,12000,"08-07-2026"),
+       s("Accord-UK Limited",1.10,6000,"26-06-2026")]},
+
+ {code:"M330",name:"Mirtazapine 30mg Tablets 28",cat:"Generics",sec:"low",
+  stock:11000,newcastle:0,onOrder:0,daysCover:10,avgDaily:1100,
+  m:[35500,30600,36200,39800,41300,40000,35000,36400,31900,32900,30900,32100,29963],
+  sup:[
+       s("Medreich PLC",0.72,9000,"19-05-2026"),s("Genesis Pharmaceuticals",0.78,7000,"24-06-2026"),
+       s("Crescent Pharma",0.76,8000,"13-07-2026"),s("Zentiva",0.79,10000,"15-07-2026"),
+       s("Accord-UK Limited",0.82,6000,"26-06-2026")]},
+
+ {code:"G756",name:"Pregabalin 75mg Capsules 56",cat:"Generics",sec:"low",
+  stock:10400,newcastle:0,onOrder:0,daysCover:8,avgDaily:1300,
+  m:[42100,40300,43400,39600,45700,47200,46200,41300,36500,38600,39100,36900,42396],
+  sup:[
+       s("Wockhardt UK",1.24,9000,"05-07-2026"),s("Genesis Pharmaceuticals",1.32,7000,"24-06-2026"),
+       s("Aurobindo Pharma",1.30,8000,"18-06-2026"),s("Crescent Pharma",1.35,10000,"13-07-2026"),
+       s("Accord-UK Limited",1.40,6000,"26-06-2026")]}
+];
+
+const MONTHS=["Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26","May 26","Jun 26","Jul 26"];
+const SECTIONS=[
+ {id:"low", label:"Under 14 days", desc:"Running low",       cls:"low"},
+ {id:"out", label:"Zero stock",    desc:"Already out",       cls:"out"},
+ {id:"fast",label:"Selling fast",  desc:"Above expectation", cls:"fast"},
+ {id:"slow",label:"Selling slow",  desc:"Below expectation", cls:"slow"}
+];
+/* ---------- helpers ---------- */
+const net = x => x.price*(1-x.rebate/100);
+const money = (v,d=2) => "£"+v.toFixed(d);
+const pence = v => v<1 ? (v*100).toFixed(1)+"p" : "£"+v.toFixed(2);   // buyers talk in pence
+const nfmt = v => v.toLocaleString("en-GB");
+const bestOf = list => { const a=list.filter(x=>!x.oos); return a.length?a.reduce((b,x)=>net(x)<net(b)?x:b):null; };
+const suggest = p => Math.max(0, Math.round(((p.avgDaily*30)-p.stock-p.onOrder)/200)*200);
+const ratio = p => { const prev=p.m.slice(-7,-1); const avg=prev.reduce((a,b)=>a+b,0)/prev.length; return avg?p.m[p.m.length-1]/avg:1; };
+
+/* ---------- data-quality: how old is a quoted price? ---------- */
+const TODAY=new Date(2026,6,23);                       // 23 Jul 2026
+const ageDays=d=>{const[a,b,c]=d.split("-").map(Number);
+  return Math.round((TODAY-new Date(c,b-1,a))/864e5);};
+const STALE=60;
+const isStale=x=>ageDays(x.date)>STALE;
+
+/* ---------- confidence: derived from demand volatility + data freshness ---------- */
+function confidence(p){
+  const r=p.m.slice(-6), mean=r.reduce((a,b)=>a+b,0)/r.length;
+  const sd=Math.sqrt(r.reduce((a,b)=>a+(b-mean)**2,0)/r.length);
+  let c=97-Math.min(20,Math.round((sd/(mean||1))*100*0.7));   // volatile demand → less certain
+  if(p.sup.some(isStale)) c-=4;                                // stale prices → less certain
+  if(!p.m.length) c-=10;
+  return Math.max(68,Math.min(97,c));
+}
+
+/* ---------- the recommendation engine ----------
+   Product-based: compares ALL suppliers, then routes to whichever action
+   fits — order from one of MY suppliers, or hand off to the owner of a cheaper
+   supplier that isn't mine.                                                    */
+function recommend(p){
+  const bestAll =bestOf(p.sup);
+  const bestMine=bestOf(p.sup.filter(x=>isMine(x.name)));
+  const held=p.stock+p.newcastle, withInbound=held+p.onOrder;
+  const coverNow=p.avgDaily?Math.round(held/p.avgDaily):999;
+  const coverIn =p.avgDaily?Math.round(withInbound/p.avgDaily):999;
+  const why=[], sig=sigs(p);
+  const runOut=new Date(TODAY.getTime()+coverNow*864e5)
+    .toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+
+  /* inbound stock rescues a short position — do not double-order. */
+  if(p.onOrder>0 && coverNow<21 && coverIn>=21){
+    why.push(`${nfmt(p.onOrder)} packs are already on order`);
+    why.push(`Inbound stock raises cover to about ${coverIn} days`);
+    if(sig.includes("fast")) why.push("Demand is running hot — keep watching, but no order needed yet");
+    return{action:"monitor",label:"Monitor — no order needed",qty:0,sup:null,why,conf:confidence(p),tone:"ok"};
+  }
+  if(sig.includes("slow")){
+    why.push(`Selling at ${Math.round(ratio(p)*100)}% of the expected rate`);
+    why.push(`${coverNow} days of cover — well above target`);
+    why.push("Likely a pricing issue — review before reordering");
+    return{action:"review",label:"Review price — do not reorder",qty:0,sup:null,why,conf:confidence(p),tone:"warn"};
+  }
+  if(sig.includes("out")){
+    why.push("No stock in Perivale or Newcastle");
+    why.push("No inbound purchase order to cover the gap");
+  }else{
+    why.push(`${coverNow} days of cover at the current sales rate`);
+    why.push(`Projected run-out is ${runOut}`);
+    if(sig.includes("fast")) why.push(`Selling ${ratio(p).toFixed(1)}× expected — also review the sell price`);
+  }
+  const urgent=sig.includes("out")?"urgent":"ok";
+  if(!bestAll) return{action:"handoff",label:"Every supplier is out of stock",qty:suggest(p),sup:null,why,conf:confidence(p),tone:"warn"};
+
+  /* cheapest overall is one of mine → order it */
+  if(isMine(bestAll.name)){
+    why.push(`${bestAll.name} is your cheapest after rebate at ${money(net(bestAll),3)}`);
+    return{action:"order",poSupplier:bestAll.name,sup:bestAll,
+           label:`Order from ${short(bestAll.name)}`,qty:suggest(p),why,conf:confidence(p),tone:urgent};
+  }
+  /* cheapest overall belongs to another buyer */
+  const owner=ownerOf(bestAll.name);
+  why.push(`Cheapest is ${bestAll.name} at ${money(net(bestAll),3)} — ${owner?owner+"'s account":"unassigned"}`);
+  if(bestMine) why.push(`Your cheapest is ${short(bestMine.name)} at ${money(net(bestMine),3)}, ${pence(net(bestMine)-net(bestAll))} more`);
+  return{action:"handoff",sup:bestAll,
+         label:`Cheaper on ${owner?owner+"'s":"an unassigned"} account (${short(bestAll.name)})`,qty:suggest(p),why,conf:confidence(p),tone:"warn"};
+}
+
+/* dest: code -> {type:'po'|'handoff', supplier, qty}.  A product has ONE destination. */
+const state={filter:"all",section:"low",q:"",open:null,dest:new Map()};
+const poEntries      = () => [...state.dest].filter(([,d])=>d.type==="po");
+const handoffEntries = () => [...state.dest].filter(([,d])=>d.type==="handoff");
+const STEP=200;
+
+/* ---------- pre-send validation (PO baskets only) ---------- */
+function validate(){
+  const out=[];
+  poEntries().forEach(([c,d])=>{
+    const p=DATA.find(x=>x.code===c), sp=p.sup.find(x=>x.name===d.supplier);
+    if(!d.qty||d.qty<=0)      out.push({bad:1,t:`${p.name} — order quantity is zero`});
+    if(!isMine(d.supplier))   out.push({bad:1,t:`${p.name} — ${d.supplier} is not one of your suppliers`});
+    if(sp&&sp.oos)            out.push({bad:1,t:`${p.name} — ${d.supplier} is out of stock`});
+    if(sp&&isStale(sp))       out.push({bad:0,t:`${p.name} — ${d.supplier} price is ${ageDays(sp.date)} days old`});
+  });
+  return out;
+}
+
+/* products in scope: carried by ANY of my assigned suppliers (product-based),
+   narrowed to one supplier when the secondary filter is set */
+const carried = () => DATA.filter(p=> state.filter==="all"
+  ? p.sup.some(x=>isMine(x.name))
+  : p.sup.some(x=>x.name===state.filter));
+/* ---------- which flags does a line raise? -----------------------------
+   Derived from the data, never hand-labelled — so a line can never claim
+   "selling fast" while its own numbers say otherwise.
+   A line with NO flag never appears in the system at all.            */
+const COVER_LOW=14, RATIO_FAST=1.5, RATIO_SLOW=0.6;
+function sigs(p){
+  const out=[], held=p.stock+p.newcastle, r=ratio(p);
+  if(held<=0)                    out.push("out");
+  else if(p.daysCover<COVER_LOW) out.push("low");
+  if(held>0 && r>=RATIO_FAST)    out.push("fast");
+  /* a line that is out of stock sells less BECAUSE it is out —
+     that is not a pricing problem, so never call it slow */
+  if(held>0 && r<=RATIO_SLOW)    out.push("slow");
+  return out;
+}
+const primary = p => sigs(p)[0] || "low";
+const inSec   = id => carried().filter(p=>sigs(p).includes(id));
+const visible = () => {
+  const q=state.q.trim().toLowerCase();
+  return inSec(state.section).filter(p=> !q || p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q));
+};
+
+/* ---------- sparkline (gradient fill + glowing endpoint) ---------- */
+function spark(p){
+  const w=160,h=38,pad=3,vals=p.m,mx=Math.max(...vals),mn=Math.min(...vals),rg=(mx-mn)||1;
+  const col={low:"var(--low)",out:"var(--out)",fast:"var(--fast)",slow:"var(--slow)"}[primary(p)];
+  const pts=vals.map((v,i)=>[pad+i*(w-pad*2)/(vals.length-1), h-pad-((v-mn)/rg)*(h-pad*2)]);
+  const line=pts.map(([x,y],i)=>(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)).join(" ");
+  const area=line+` L${(w-pad).toFixed(1)} ${h} L${pad} ${h} Z`;
+  const [lx,ly]=pts[pts.length-1];
+  const gid="g"+p.code.replace(/\W/g,"");
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="${gid}" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="${col}" stop-opacity=".34"/><stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#${gid})"/>
+    <path d="${line}" fill="none" stroke="${col}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="5" fill="${col}" opacity=".2"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.4" fill="${col}"/>
+  </svg>`;
+}
+
+/* ---------- render: rail nav + KPI tiles ---------- */
+function renderNav(){
+  document.getElementById("secNav").innerHTML=SECTIONS.map(sc=>{
+    const n=inSec(sc.id).length;
+    return `<button class="secBtn ${sc.cls}" data-sec="${sc.id}" aria-current="${state.section===sc.id}">
+      <span class="dt"></span>${sc.label}<span class="ct">${n}</span></button>`;
+  }).join("");
+  document.getElementById("tiles").innerHTML=SECTIONS.map(sc=>{
+    const n=inSec(sc.id).length;
+    return `<button class="kpi ${sc.cls}" data-sec="${sc.id}" aria-current="${state.section===sc.id}">
+      <span class="kpi-top"><span class="kpi-dot"></span><span class="kpi-l">${sc.label}</span></span>
+      <span class="kpi-v">${n}</span><span class="kpi-d">${sc.desc}</span></button>`;
+  }).join("");
+  const attn=carried().filter(p=>sigs(p).length>0).length;
+  document.getElementById("attnCount").textContent=attn;
+  document.getElementById("supCount").textContent=ALL_SUPPLIERS.filter(isMine).length;
+  document.getElementById("filterNote").innerHTML=
+    state.filter==="all" ? "" : ` · showing <b>${short(state.filter)}</b> only`;
+  document.getElementById("listTitle").textContent=SECTIONS.find(x=>x.id===state.section).label;
+}
+
+/* ---------- render: list ---------- */
+function renderList(){
+  const rows=visible();
+  const el=document.getElementById("list");
+  if(!rows.length){
+    el.innerHTML=`<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <p>Nothing in this section${state.filter==="all"?"":` for ${state.filter}`}.</p></div>`;
+    return;
+  }
+  el.innerHTML=rows.map(p=>{
+    const best=bestOf(p.sup);
+    const d=state.dest.get(p.code);
+    const cover=Math.min(100,(p.daysCover/30)*100);
+    const chip=id=>id==="out"?`<span class="badge out">Out of stock</span>`
+      :id==="fast"?`<span class="badge fast">${ratio(p).toFixed(1)}× expected</span>`
+      :id==="slow"?`<span class="badge slow">${Math.round(ratio(p)*100)}% of expected</span>`
+      :`<span class="badge low">${p.daysCover} days left</span>`;
+    const ordered=sigs(p).slice().sort(a=>a===state.section?-1:1);
+    const badge=chip(ordered[0]);
+    const rec=recommend(p);
+    return `<article class="row ${primary(p)} ${state.open===p.code?"open":""}" data-code="${p.code}">
+      <button class="rHead" aria-expanded="${state.open===p.code}">
+        <div class="nameCell">
+          <span class="pick ${d?"on":""}" data-pick="${p.code}"${best?"":" data-nopick=\"1\""} role="checkbox" aria-checked="${d?"true":"false"}" aria-label="Select ${p.name}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>
+          </span>
+          <div>
+            <div class="pName">${p.name}</div>
+            <div class="pCode">${p.code}<span class="cat">${p.cat}</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="cLab">Stock</div>
+          <div class="num">${nfmt(p.stock)}</div>
+        </div>
+        <div class="cover coverCell">
+          <div class="coverRow">
+            <span class="coverDays">${p.daysCover}<small>d</small></span>
+            ${badge}
+          </div>
+          <div class="gauge" title="${p.daysCover} days of cover — target 14+">
+            <div class="gauge-track"><i class="gauge-fill" style="width:${cover}%"></i></div>
+            <span class="gauge-tick" style="left:46.7%"></span>
+          </div>
+        </div>
+        <div class="sparkCell">
+          <div class="cLab">13-month trend</div>
+          ${spark(p)}
+        </div>
+        <div class="bestBox bestCell">
+          <div class="cLab">Best net price</div>
+          <div class="bestSup">${best?best.name:"— none in stock —"}</div>
+          ${best?`<div class="bestNet">${money(net(best),3)} <span class="was">${money(best.price)}</span></div>`:""}
+        </div>
+        <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+      </button>
+      <div class="rBody"><div class="rBodyIn"><div class="bodyPad">
+        <div class="recPanel ${rec.tone}">
+          <div class="recMain">
+            <div class="recTop">
+              <span class="recTag">Recommended action</span>
+              <span class="recConf" title="Confidence is derived from demand volatility and how fresh the supplier prices are">
+                <span class="confBar"><i style="width:${rec.conf}%"></i></span>${rec.conf}% confidence
+              </span>
+            </div>
+            <div class="recLabel">${rec.label}</div>
+            ${rec.qty?`<div class="recQty">Suggested quantity <b>${nfmt(rec.qty)}</b> packs${rec.sup?` · ${rec.sup.name} at ${money(net(rec.sup),3)} net`:""}</div>`:""}
+          </div>
+          <div class="recWhy">
+            <div class="whyTitle">Why this action</div>
+            <ul>${rec.why.map(w=>`<li>${w}</li>`).join("")}</ul>
+          </div>
+        </div>
+        <div class="bodyBar">
+          <div class="kv"><span class="k">Perivale</span><span class="v">${nfmt(p.stock)}</span></div>
+          <div class="kv"><span class="k">Newcastle</span><span class="v">${nfmt(p.newcastle)}</span></div>
+          <div class="kv"><span class="k">On order</span><span class="v">${nfmt(p.onOrder)}</span></div>
+          <div class="kv"><span class="k">Avg / day</span><span class="v">${nfmt(p.avgDaily)}</span></div>
+          <div class="kv"><span class="k">Days cover</span><span class="v">${p.daysCover}</span></div>
+          <div class="kv qty"><span class="k">Suggested order</span><span class="v">${rec.qty?nfmt(rec.qty)+" packs":"—"}</span></div>
+        </div>
+        <div class="tblWrap"><table class="sup">
+          <thead><tr>
+            <th>Supplier</th><th class="r">Price</th><th class="r">Rebate</th><th class="r">Net price</th>
+            <th>Availability</th><th>Owner</th><th class="r">Updated</th><th class="ctr">Order</th>
+          </tr></thead>
+          <tbody>${p.sup.slice().sort((a,b)=>net(a)-net(b)).map(x=>{
+            const mineRow=isMine(x.name), sel=d&&d.supplier===x.name;
+            let act;
+            if(sel){
+              act=`<div class="stepper">
+                <button class="stepBtn" data-step="${p.code}" data-dir="-1" aria-label="decrease quantity">−</button>
+                <input class="stepNum" type="number" min="0" step="${STEP}" value="${d.qty}" data-qval="${p.code}" aria-label="quantity">
+                <button class="stepBtn" data-step="${p.code}" data-dir="1" aria-label="increase quantity">+</button>
+                <button class="stepRm" data-rmrow="${p.code}" aria-label="remove from basket">✕</button>
+              </div>`;
+            }else{
+              act = x.oos
+                ? `<span class="actMuted">out of stock</span>`
+                : `<button class="cartBtn" data-add="${p.code}" data-sup="${esc(x.name)}" title="Add to basket — ${short(x.name)}">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.2 11a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/><path d="M15 5.5v4M13 7.5h4"/></svg>
+                   </button>`;
+            }
+            return `
+            <tr class="${best&&x.name===best.name?"win":""} ${x.oos?"oos":""} ${sel?"picked":""}">
+              <td><span class="sName">${x.name}
+                ${x.note?`<span class="tagNote">${x.note}</span>`:""}
+                ${best&&x.name===best.name?`<span class="tagBest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14l1.5-11-5 3.5L12 5l-3.5 7.5-5-3.5z"/></svg>Best net</span>`:""}
+                ${mineRow?`<span class="tagMine">Mine</span>`:""}
+              </span></td>
+              <td class="r mono">${money(x.price)}</td>
+              <td class="r mono">${x.rebate}%</td>
+              <td class="r netv">${money(net(x),3)}</td>
+              <td>${x.oos?`<span class="stat oos"><i class="d"></i>Out of stock</span>`:`<span class="stat in"><i class="d"></i>In stock</span>`}</td>
+              <td><span class="init" title="${ownerOf(x.name)}">${ownerInit(x.name)}</span></td>
+              <td class="r mono" style="font-size:11px;color:var(--ink-faint)">${x.date}
+                ${isStale(x)?`<span class="tagStale" title="Quoted ${ageDays(x.date)} days ago — may be out of date">${ageDays(x.date)}d old</span>`:""}</td>
+              <td class="ctr">${act}</td>
+            </tr>`;}).join("")}
+          </tbody>
+        </table></div>
+        <div class="rebFoot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span>Net price = list price after annual rebate. Tap the <b>basket</b> on any supplier to add it, then set the quantity with − / +. Forwarding to the buyers happens from the basket.</span>
+        </div>
+      </div></div></div>
+    </article>`;
+  }).join("");
+  const pickable=rows.filter(p=>bestOf(p.sup));
+  const allSel=pickable.length>0 && pickable.every(p=>state.dest.has(p.code));
+  const sa=document.getElementById("selAll");
+  if(sa){ sa.classList.toggle("on",allSel); sa.setAttribute("aria-pressed",allSel?"true":"false");
+    document.getElementById("selAllTxt").textContent=allSel?"Clear all":"Select all"; }
+}
+
+/* ---------- render: basket ---------- */
+function basketItem(c,d){
+  const p=DATA.find(x=>x.code===c), sp=p.sup.find(x=>x.name===d.supplier);
+  return `<div class="bItem">
+    <div class="bi"><div class="bn2">${p.name}</div>
+      <div class="bm">${p.code} · ${d.supplier}${sp?` · ${money(net(sp),3)} net`:""}</div></div>
+    <div class="bq">${nfmt(d.qty)}<small>packs</small></div>
+    <button class="rm" data-rm="${c}" aria-label="Remove ${p.name}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button></div>`;
+}
+function renderBaskets(){
+  const all=[...state.dest], n=all.length;
+  const cnt=document.getElementById("basketCount");
+  cnt.textContent=n; cnt.classList.toggle("zero",n===0);
+  document.getElementById("basketSub").textContent =
+    n?`${n} line${n>1?"s":""} to email`:"Nothing selected";
+
+  // every basket line is grouped by SUPPLIER (one clean block per supplier)
+  const groups={}; all.forEach(([c,d])=>{(groups[d.supplier]=groups[d.supplier]||[]).push([c,d]);});
+  let html="";
+  Object.entries(groups).forEach(([sup,items])=>{
+    const owner=ownerOf(sup);
+    html+=`<section class="bSec">
+      <div class="hoOwner"><span class="init">${ownerInit(sup)}</span>${sup}<span class="bown">· ${owner||"unassigned"}${owner===BUYER?" (you)":""}</span></div>
+      ${items.map(([c,d])=>basketItem(c,d)).join("")}</section>`;
+  });
+  document.getElementById("basketBody").innerHTML=html||
+    `<div class="bEmpty" style="margin:22px 0">Basket is empty.<br>Open a product and tap the basket on a supplier.</div>`;
+
+  let val=0;
+  all.forEach(([c,d])=>{const p=DATA.find(x=>x.code===c),sp=p.sup.find(x=>x.name===d.supplier);if(sp)val+=net(sp)*d.qty;});
+  document.getElementById("poVal").textContent=money(val);
+  document.getElementById("sendMail").disabled=!n;
+}
+function renderSupFilter(){
+  if(state.filter!=="all" && !ALL_SUPPLIERS.includes(state.filter)) state.filter="all";
+  document.getElementById("supSel").innerHTML=
+    `<option value="all"${state.filter==="all"?" selected":""}>All my suppliers</option>`+
+    ALL_SUPPLIERS.slice().sort().map(x=>`<option value="${esc(x)}"${x===state.filter?" selected":""}>${x}${isMine(x)?" ✓":""}</option>`).join("");
+}
+const renderAll=()=>{renderSupFilter();renderNav();renderList();renderBaskets();};
+
+/* ---------- toast ---------- */
+let tT;
+function toast(msg){
+  const t=document.getElementById("toast");
+  document.getElementById("toastMsg").textContent=msg;
+  t.classList.add("on"); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove("on"),2600);
+}
+
+/* ---------- drawer + modal ---------- */
+const drawer=document.getElementById("drawer"), scrim=document.getElementById("scrim"), modal=document.getElementById("modal");
+let suppliersDirty=false;
+const openDrawer=()=>{drawer.classList.add("on");scrim.classList.add("on");};
+const closeDrawer=()=>{drawer.classList.remove("on");if(!modal.classList.contains("on"))scrim.classList.remove("on");};
+const closeModal=()=>{if(suppliersDirty){suppliersDirty=false;renderAll();}modal.classList.remove("on");if(!drawer.classList.contains("on"))scrim.classList.remove("on");};
+document.getElementById("openBasket").onclick=openDrawer;
+document.getElementById("closeDrawer").onclick=closeDrawer;
+document.getElementById("closeModal").onclick=closeModal;
+document.getElementById("mCancel").onclick=closeModal;
+scrim.onclick=()=>{closeModal();closeDrawer();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeDrawer();}});
+
+/* ---------- send: one clear email template to the buyers ---------- */
+document.getElementById("sendMail").onclick=()=>{
+  const all=[...state.dest]; if(!all.length) return;
+  const warns=[];
+  all.forEach(([c,d])=>{const p=DATA.find(x=>x.code===c),sp=p.sup.find(x=>x.name===d.supplier);
+    if(!d.qty||d.qty<=0) warns.push(`${p.name} — quantity is zero`);
+    if(sp&&isStale(sp))  warns.push(`${p.name} — ${d.supplier} price is ${ageDays(sp.date)} days old`);
+  });
+  const groups={}; all.forEach(([c,d])=>{(groups[d.supplier]=groups[d.supplier]||[]).push([c,d]);});
+  let total=0; all.forEach(([c,d])=>{const p=DATA.find(x=>x.code===c),sp=p.sup.find(x=>x.name===d.supplier);if(sp)total+=net(sp)*d.qty;});
+  const dateStr=TODAY.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+
+  const warnBox = warns.length
+    ? `<div class="checkBox warn"><div class="ckHead">${warns.length} thing${warns.length>1?"s":""} to double-check</div>
+         <ul>${warns.map(t=>`<li class="warn">${t}</li>`).join("")}</ul></div>` : "";
+
+  const groupBlocks=Object.entries(groups).map(([sup,items])=>{
+    const owner=ownerOf(sup);
+    let sub=0; items.forEach(([c,d])=>{const p=DATA.find(x=>x.code===c),sp=p.sup.find(x=>x.name===sup);if(sp)sub+=net(sp)*d.qty;});
+    return `<div class="mailGrp">
+      <div class="gh"><span class="init">${ownerInit(sup)}</span>${sup}<span class="who">${owner||"unassigned"}${owner===BUYER?" (you)":""} · ${items.length} line${items.length>1?"s":""} · ${money(sub)}</span></div>
+      <div style="overflow-x:auto"><table class="poTbl">
+        <thead><tr><th>Product</th><th>Code</th><th>Qty</th><th>Net</th><th>Value</th></tr></thead>
+        <tbody>${items.map(([c,d])=>{const p=DATA.find(x=>x.code===c),sp=p.sup.find(x=>x.name===sup);
+          return `<tr><td>${p.name}</td><td class="m">${p.code}</td><td class="m">${nfmt(d.qty)}</td><td class="m">${money(net(sp),3)}</td><td class="m">${money(net(sp)*d.qty)}</td></tr>`;}).join("")}</tbody>
+      </table></div>
+    </div>`;}).join("");
+
+  document.getElementById("mTitle").textContent="Email to the buyers' shared inbox";
+  document.getElementById("mSub").textContent="Split by supplier — ready to send";
+  document.getElementById("mBody").innerHTML = warnBox + `
+    <div class="emailTpl">
+      <div class="emHead">
+        <div class="emRow"><span class="emK">Subject</span><span class="emV">Replenishment — lines to order (${dateStr})</span></div>
+        <div class="emRow"><span class="emK">To</span><span class="emV">Buyers group · buyers@bnsdistribution.co.uk</span></div>
+        <div class="emRow"><span class="emK">From</span><span class="emV">${BUYER} · Generics desk</span></div>
+      </div>
+      <p class="emP">Hi team,</p>
+      <p class="emP">Below are the lines to order, <b>one block per supplier</b>. Please jump to your supplier(s) and raise the PO for those lines. All prices are net of rebate.</p>
+      ${groupBlocks}
+      <p class="emTotal">Total across all lines <b>${money(total)}</b></p>
+      <p class="emP">Thanks,<br>${BUYER}</p>
+    </div>`;
+  const cf=document.getElementById("mConfirm");
+  cf.textContent="Send email"; cf.disabled=false;
+  cf.onclick=()=>{
+    const k=all.length; state.dest.clear(); renderAll(); closeModal();
+    toast(`Email sent — ${k} line${k>1?"s":""} to the buyers' group`);
+  };
+  modal.classList.add("on"); scrim.classList.add("on");
+};
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const st=e.target.closest("[data-suptoggle]");
+  if(st){
+    const n=st.dataset.suptoggle;
+    if(MINE.has(n)) MINE.delete(n); else MINE.add(n);   // freely toggle
+    saveMine(); suppliersDirty=true;                     // apply to the app once, on close (avoids re-rendering 40 rows per click)
+    document.getElementById("mSub").textContent=`${ALL_SUPPLIERS.filter(isMine).length} of ${ALL_SUPPLIERS.length} are yours`;
+    st.classList.toggle("on"); st.querySelector(".pick").classList.toggle("on");
+    st.querySelector(".supToggleOwner").textContent = isMine(n) ? "yours" : (ownerOf(n)||"unassigned");
+    return;
+  }
+  const sec=e.target.closest("[data-sec]");
+  if(sec){state.section=sec.dataset.sec;state.open=null;renderAll();return;}
+  const pick=e.target.closest("[data-pick]");
+  if(pick){
+    const c=pick.dataset.pick, p=DATA.find(x=>x.code===c);
+    if(state.dest.has(c)){ state.dest.delete(c); toast("Removed from basket"); }
+    else if(pick.hasAttribute("data-nopick")){ toast("No supplier in stock for this line"); return; }
+    else{ const b=bestOf(p.sup); state.dest.set(c,{type:isMine(b.name)?"po":"handoff",supplier:b.name,qty:suggest(p)}); toast(`Added — best price from ${short(b.name)}`); }
+    renderList();renderBaskets();return;
+  }
+  const add=e.target.closest("[data-add]");
+  if(add){
+    const c=add.dataset.add, sup=add.dataset.sup, p=DATA.find(x=>x.code===c);
+    state.dest.set(c,{type:isMine(sup)?"po":"handoff",supplier:sup,qty:suggest(p)});
+    toast(`Added to basket — ${short(sup)}`);
+    renderList();renderBaskets();return;
+  }
+  const step=e.target.closest("[data-step]");
+  if(step){
+    const d=state.dest.get(step.dataset.step);
+    if(d){ d.qty=Math.max(0,(d.qty||0)+(+step.dataset.dir)*STEP); renderList();renderBaskets(); }
+    return;
+  }
+  const rmrow=e.target.closest("[data-rmrow]");
+  if(rmrow){ state.dest.delete(rmrow.dataset.rmrow); toast("Removed from basket"); renderList();renderBaskets(); return; }
+  const rm=e.target.closest("[data-rm]");
+  if(rm){ state.dest.delete(rm.dataset.rm); renderAll(); return; }
+  const head=e.target.closest(".rHead");
+  if(head){
+    const code=head.closest(".row").dataset.code;
+    state.open=state.open===code?null:code;
+    renderList();return;
+  }
+});
+/* typing directly in the stepper number updates the basket without a full re-render */
+document.addEventListener("input",e=>{
+  const qi=e.target.closest("[data-qval]");
+  if(qi){ const d=state.dest.get(qi.dataset.qval); if(d){ d.qty=+qi.value||0; renderBaskets(); } }
+});
+/* ---------- "select my suppliers" ---------- */
+function suppliersEditorHTML(){
+  return `<p style="margin:0 0 13px;font-size:12.5px;color:var(--ink-soft)">Tick the suppliers you're contracted with. This marks them as yours — everyone still sees the full supplier list; it only sets who each line belongs to for the email.</p>
+    <div class="supGrid">`+
+    ALL_SUPPLIERS.slice().sort().map(name=>{
+      const on=isMine(name);
+      return `<button class="supToggle ${on?"on":""}" data-suptoggle="${esc(name)}">
+        <span class="pick ${on?"on":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>
+        <span class="supToggleName">${name}</span>
+        <span class="supToggleOwner">${on?"yours":(ownerOf(name)||"unassigned")}</span>
+      </button>`;}).join("")+`</div>`;
+}
+function openSuppliersEditor(){
+  document.getElementById("mTitle").textContent="Select my suppliers";
+  document.getElementById("mSub").textContent=`${ALL_SUPPLIERS.filter(isMine).length} of ${ALL_SUPPLIERS.length} are yours`;
+  document.getElementById("mBody").innerHTML=suppliersEditorHTML();
+  const cf=document.getElementById("mConfirm"); cf.textContent="Done"; cf.disabled=false; cf.onclick=closeModal;
+  modal.classList.add("on"); scrim.classList.add("on");
+}
+document.getElementById("editSups").onclick=openSuppliersEditor;
+document.getElementById("supSel").onchange=e=>{state.filter=e.target.value;state.open=null;renderAll();};
+document.getElementById("q").oninput=e=>{state.q=e.target.value;renderList();};
+document.getElementById("selAll").onclick=()=>{
+  const pickable=visible().filter(p=>bestOf(p.sup));
+  const allSel=pickable.length>0 && pickable.every(p=>state.dest.has(p.code));
+  if(allSel){ pickable.forEach(p=>state.dest.delete(p.code)); toast("Selection cleared"); }
+  else{ pickable.forEach(p=>{ if(!state.dest.has(p.code)){ const b=bestOf(p.sup); state.dest.set(p.code,{type:isMine(b.name)?"po":"handoff",supplier:b.name,qty:suggest(p)}); } });
+    toast(`Selected ${pickable.length} line${pickable.length>1?"s":""}`); }
+  renderAll();
+};
+
+renderAll();
+
+/* ================= demo one-tap login (role picker) ================= */
+const BUYERS    = ["Omkar","Rob","Matt","Denalka","Zain"].filter(b=>INIT[b]);
+const FULLNAME  = {Omkar:"Omkar Patil"};            /* only the confirmed surname */
+const buyerLabel= b => FULLNAME[b] || b;
+const acctCount = b => ALL_SUPPLIERS.filter(n=>DEFAULT_OWNER[n]===b).length;
+const loginEl   = document.getElementById("login");
+
+function renderLogin(){
+  document.getElementById("loginGrid").innerHTML = BUYERS.map(b=>{
+    const n = acctCount(b);
+    return `<button class="loginPick" data-buyer="${b}">
+      <span class="loginAv">${INIT[b]}</span>
+      <span class="loginWho">
+        <span class="loginNm">${buyerLabel(b)}</span>
+        <span class="loginSub">${n} supplier account${n===1?"":"s"}</span>
+      </span>
+    </button>`;
+  }).join("");
+}
+function applyBuyer(b){
+  BUYER = b;
+  MINE  = loadMine();
+  state.dest.clear();
+  state.open = null;
+  document.getElementById("buyerAv").textContent   = INIT[b];
+  document.getElementById("buyerName").textContent = buyerLabel(b);
+  document.getElementById("buyerRole").textContent = acctCount(b) + " supplier accounts";
+  try{ sessionStorage.setItem("cockpit-buyer", b); }catch(e){}
+  renderAll();
+}
+document.getElementById("loginGrid").addEventListener("click", e=>{
+  const t = e.target.closest("[data-buyer]"); if(!t) return;
+  applyBuyer(t.dataset.buyer);
+  loginEl.classList.add("off");
+});
+document.getElementById("switchBuyer").addEventListener("click", ()=>{ renderLogin(); loginEl.classList.remove("off"); });
+renderLogin();
+(function(){                       /* stay signed in across a refresh in the same tab */
+  let saved=null; try{ saved=sessionStorage.getItem("cockpit-buyer"); }catch(e){}
+  if(saved && BUYERS.includes(saved)){ applyBuyer(saved); loginEl.classList.add("off"); }
+})();
+</script>
+
+</body></html>
