@@ -223,6 +223,12 @@ nav.secs{display:flex;flex-direction:column;gap:3px}
 .badge.out{background:var(--out-soft);color:var(--out);border-color:var(--out-line)}
 .badge.fast{background:var(--fast-soft);color:var(--fast);border-color:var(--fast-line)}
 .badge.slow{background:var(--slow-soft);color:var(--slow);border-color:var(--slow-line)}
+.badge.unalloc{background:transparent;color:var(--ink);border:1px dashed var(--line-strong)}
+.unallocNote{display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;margin:0 0 12px;
+  padding:10px 14px;border-radius:var(--r-s);background:var(--surface-2);border:1px dashed var(--line-strong);color:var(--ink);font-size:13px}
+.unallocNote:hover{border-color:var(--accent-line)}
+.unallocNote .uaDot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--ink-soft)}
+.unallocNote .uaGo{margin-left:auto;color:var(--accent);font-weight:650;white-space:nowrap}
 
 .spark{width:100%;height:38px;display:block}
 .bestBox{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -624,6 +630,7 @@ tr.win .netv{color:var(--accent);text-shadow:0 0 18px var(--accent-glow)}
           <span id="selAllTxt">Select all</span>
         </button>
       </div>
+      <div id="unallocNote"></div>
       <div id="list"></div>
     </section>
   </main>
@@ -1129,7 +1136,7 @@ function recommend(p){
 }
 
 /* dest: code -> {type:'po'|'handoff', supplier, qty}.  A product has ONE destination. */
-const state={filter:"all",section:"low",q:"",open:null,dest:new Map()};
+const state={filter:"mine",section:"low",q:"",open:null,dest:new Map()};
 const poEntries      = () => [...state.dest].filter(([,d])=>d.type==="po");
 const handoffEntries = () => [...state.dest].filter(([,d])=>d.type==="handoff");
 const STEP=200;
@@ -1149,9 +1156,14 @@ function validate(){
 
 /* products in scope: carried by ANY of my assigned suppliers (product-based),
    narrowed to one supplier when the secondary filter is set */
-const carried = () => DATA.filter(p=> state.filter==="all"
-  ? p.sup.some(x=>isMine(x.name))
-  : p.sup.some(x=>x.name===state.filter));
+const carried = () => DATA.filter(p=>
+    state.filter==="mine" ? p.sup.some(x=>isMine(x.name))     /* My Suppliers  */
+  : state.filter==="all"  ? true                               /* All Suppliers */
+  : p.sup.some(x=>x.name===state.filter));                     /* one supplier  */
+/* A line is "Unallocated" when none of its suppliers has been selected by any buyer.
+   Demo: other buyers are assumed to keep their default suppliers; in production every
+   buyer's selection is held centrally so this is known across all buyers.            */
+const unallocated = p => p.sup.every(x => ownerOf(x.name) === "");
 /* ---------- which flags does a line raise? -----------------------------
    Derived from the data, never hand-labelled — so a line can never claim
    "selling fast" while its own numbers say otherwise.
@@ -1211,8 +1223,13 @@ function renderNav(){
   document.getElementById("attnCount").textContent=attn;
   document.getElementById("supCount").textContent=ALL_SUPPLIERS.filter(isMine).length;
   document.getElementById("filterNote").innerHTML=
-    state.filter==="all" ? "" : ` · showing <b>${short(state.filter)}</b> only`;
+    state.filter==="mine" ? "" : state.filter==="all" ? " · showing <b>all suppliers</b>"
+      : ` · showing <b>${short(state.filter)}</b> only`;
   document.getElementById("listTitle").textContent=SECTIONS.find(x=>x.id===state.section).label;
+  const ua=DATA.filter(p=>sigs(p).length>0 && unallocated(p)).length;
+  document.getElementById("unallocNote").innerHTML=(state.filter==="mine" && ua>0)
+    ? `<button class="unallocNote" data-goall="1"><span class="uaDot"></span><span><b>${ua}</b> at-risk line${ua===1?" is":"s are"} unallocated &mdash; no buyer has selected ${ua===1?"its":"their"} suppliers.</span><span class="uaGo">View in All Suppliers &rarr;</span></button>`
+    : "";
 }
 
 /* ---------- render: list ---------- */
@@ -1222,7 +1239,7 @@ function renderList(){
   if(!rows.length){
     el.innerHTML=`<div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <p>Nothing in this section${state.filter==="all"?"":` for ${state.filter}`}.</p></div>`;
+      <p>Nothing in this section${(state.filter==="mine"||state.filter==="all")?"":` for ${state.filter}`}.</p></div>`;
     return;
   }
   el.innerHTML=rows.map(p=>{
@@ -1244,7 +1261,7 @@ function renderList(){
           </span>
           <div>
             <div class="pName">${p.name}</div>
-            <div class="pCode">${p.code}<span class="cat">${p.cat}</span></div>
+            <div class="pCode">${p.code}<span class="cat">${p.cat}</span>${unallocated(p)?`<span class="badge unalloc">Unallocated</span>`:""}</div>
           </div>
         </div>
         <div>
@@ -1387,9 +1404,11 @@ function renderBaskets(){
   document.getElementById("sendMail").disabled=!n;
 }
 function renderSupFilter(){
-  if(state.filter!=="all" && !ALL_SUPPLIERS.includes(state.filter)) state.filter="all";
+  if(state.filter!=="mine" && state.filter!=="all" && !ALL_SUPPLIERS.includes(state.filter)) state.filter="mine";
+  if(state.filter==="mine" && MINE.size===0) state.filter="all";   /* nothing selected -> All Suppliers */
   document.getElementById("supSel").innerHTML=
-    `<option value="all"${state.filter==="all"?" selected":""}>All my suppliers</option>`+
+    `<option value="mine"${state.filter==="mine"?" selected":""}>My Suppliers</option>`+
+    `<option value="all"${state.filter==="all"?" selected":""}>All Suppliers</option>`+
     ALL_SUPPLIERS.slice().sort().map(x=>`<option value="${esc(x)}"${x===state.filter?" selected":""}>${x}${isMine(x)?" ✓":""}</option>`).join("");
 }
 const renderAll=()=>{renderSupFilter();renderNav();renderList();renderBaskets();};
@@ -1481,6 +1500,8 @@ document.addEventListener("click",e=>{
   }
   const sec=e.target.closest("[data-sec]");
   if(sec){state.section=sec.dataset.sec;state.open=null;renderAll();return;}
+  const goall=e.target.closest("[data-goall]");
+  if(goall){ state.filter="all"; state.open=null; renderAll(); return; }
   const pick=e.target.closest("[data-pick]");
   if(pick){
     const c=pick.dataset.pick, p=DATA.find(x=>x.code===c);
